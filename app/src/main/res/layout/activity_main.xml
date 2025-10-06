@@ -1,19 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/idLogin"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:hint="이메일을 입력하세요"
+        android:inputType="textUri"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:padding="12dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:id="@+id/pwLogin"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호를 입력하세요"
+        android:inputType="textUri"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:padding="12dp" />
+
+    <!-- 전송 버튼 -->
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="로그인"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:padding="12dp" />
+
+    <Button
+        android:id="@+id/registerPage"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:text="회원가입 하러가기"/>
+
+</LinearLayout>
