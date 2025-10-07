@@ -1,11 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>한빛모아 - 로그인</title>
+
+    <!-- 구글 폰트 (선택) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-    
+
+    <main class="wrap" role="main">
+        <section class="card" aria-label="로그인 화면">
+            <h1 class="logo" aria-hidden="true">한빛모아</h1>
+
+            <!-- 이메일 -->
+            <label class="field" for="email">
+                <div class="hint">이메일을 입력하세요</div>
+                <input id="email" type="email" placeholder="example@domain.com" autocomplete="email" />
+                <div class="underline" aria-hidden="true"></div>
+            </label>
+
+            <!-- 비밀번호 -->
+            <label class="field" for="password">
+                <div class="hint">비밀번호를 입력하세요</div>
+                <input id="password" type="password" placeholder="비밀번호" autocomplete="current-password" />
+                <div class="underline" aria-hidden="true"></div>
+            </label>
+
+            <!-- 버튼들 -->
+            <button id="loginBtn" class="btn btn-primary">로그인</button>
+            <button id="signupBtn" class="btn btn-outline">회원가입</button>
+
+            <div class="spacer"></div>
+
+            <!-- 컬러 스와치 (디자이너 참고용) -->
+            <div class="palette" aria-hidden="true">
+                <div class="chip">
+                    <div class="swatch" style="background:#787878"></div>
+                    <div style="font-weight:700;color:#787878">#787878</div>
+                </div>
+                <div class="chip">
+                    <div class="swatch" style="background:#18a8f1"></div>
+                    <div style="font-weight:700;color:#18a8f1">#18a8f1</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="main.js"></script>
 </body>
+
 </html>
