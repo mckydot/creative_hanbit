@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.example.creative_hanbit'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.creative_hanbit"
