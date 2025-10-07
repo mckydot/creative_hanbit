@@ -15,7 +15,10 @@
         android:layout_height="wrap_content"
         android:hint="이메일을 입력하세요"
         android:inputType="textUri"
+        android:fontFamily="@font/bmjua_ttf"
         android:imeOptions="actionDone"
+        android:textColorHint="#787878"
+        android:backgroundTint="#18a8f1"
         android:singleLine="true"
         android:padding="12dp" />
 
@@ -25,7 +28,10 @@
         android:layout_height="wrap_content"
         android:hint="비밀번호를 입력하세요"
         android:inputType="textUri"
+        android:fontFamily="@font/bmjua_ttf"
         android:imeOptions="actionDone"
+        android:textColorHint="#787878"
+        android:backgroundTint="#18a8f1"
         android:singleLine="true"
         android:padding="12dp" />
 
@@ -38,13 +44,20 @@
         android:layout_marginTop="12dp"
         android:backgroundTint="@android:color/holo_blue_light"
         android:textColor="@android:color/white"
+        android:fontFamily="@font/bmjua_ttf"
+        android:textSize="15sp"
         android:textStyle="bold"
         android:padding="12dp" />
 
     <Button
         android:id="@+id/registerPage"
+        android:textColor="@android:color/holo_blue_light"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/bmjua_ttf"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:padding="12dp"
         android:text="회원가입 하러가기"/>
 
 </LinearLayout>

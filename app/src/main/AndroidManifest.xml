@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Creative_hanbit"
         tools:targetApi="31">
         <activity
+            android:name=".MainPage"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
