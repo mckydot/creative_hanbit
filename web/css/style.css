@@ -1,0 +1,180 @@
+@font-face {
+    font-family: 'Juache';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
+:root {
+    --sky: #18a8f1;
+    --gray: #787878;
+    --white: #ffffff;
+    --radius: 30px;
+    --gap: 18px;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Juache', "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--white);
+    color: var(--gray);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 중앙 컨테이너 */
+.wrap {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.card {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* 로고 텍스트 */
+.logo {
+    margin-bottom: 48px;
+    text-align: center;
+    font-size: 56px;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: -2px;
+    text-shadow:
+        -3px -3px 0 var(--sky),
+        3px -3px 0 var(--sky),
+        -3px 3px 0 var(--sky),
+        3px 3px 0 var(--sky),
+        0 0 8px rgba(24, 168, 241, 0.6);
+}
+
+/* 입력 그룹 */
+.field {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+.field input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    padding: 12px 6px;
+    font-size: 16px;
+    background: transparent;
+    color: #333;
+    font-family: 'Juache';
+}
+
+/* placeholder 색상 */
+.field input::placeholder {
+    color: var(--gray);
+    opacity: 0.9;
+}
+
+/* 밑줄 스타일 */
+.underline {
+    height: 4px;
+    background: transparent;
+    position: relative;
+}
+
+.underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--sky);
+    transition: height .18s ease, background .18s ease;
+}
+
+.field input:focus + .underline::after {
+    height: 3px;
+    background: var(--sky);
+}
+
+/* 버튼 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform .06s ease, box-shadow .06s ease;
+    margin-bottom: 12px;
+    text-decoration: none;
+    font-family: 'Juache';
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--sky);
+    color: var(--white);
+    border: 0;
+    box-shadow: 0 6px 20px rgba(24, 168, 241, 0.15);
+}
+
+.btn-outline {
+    background: var(--white);
+    color: var(--sky);
+    border: 2px solid var(--sky);
+}
+
+/* 색상 팔레트 */
+.palette {
+    margin-top: 36px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* 반응형 */
+@media (max-height:700px) {
+    .card {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+    .logo {
+        font-size: 55px;
+        margin-bottom: 35px;
+    }
+}
