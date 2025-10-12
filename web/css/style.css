@@ -89,8 +89,9 @@ body {
 }
 
 /* 밑줄 스타일 */
+/* 기존 코드 중 이 부분만 교체 */
 .underline {
-    height: 4px;
+    height: 2px;
     background: transparent;
     position: relative;
 }
@@ -103,13 +104,16 @@ body {
     bottom: 0;
     height: 2px;
     background: var(--sky);
-    transition: height .18s ease, background .18s ease;
+    transition: transform .18s ease, background .18s ease;
+    transform-origin: left center;
 }
 
 .field input:focus + .underline::after {
-    height: 3px;
+    height: 2px;
     background: var(--sky);
+    transform: scaleX(1.05);
 }
+
 
 /* 버튼 */
 .btn {
