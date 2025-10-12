@@ -27,6 +27,7 @@
                 e.preventDefault();
                 // 회원가입 페이지로 이동하거나 모달 열기 등
                 alert('회원가입 화면으로 이동합니다.');
+                location.href = 'register.html';
             });
 
             // 키보드 엔터로 로그인 (간단)
