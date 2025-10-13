@@ -1,11 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>한빛모아 || 회원가입</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dropdown.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    hello world.
+    <main class="wrap" id="frm" role="main">
+        <section class="card" aria-label="회원가입 화면">
+            <h1 class="logo" aria-hidden="true">회원 정보 등록</h1>
+
+            <!-- ✅ 드롭다운 메뉴 시작 -->
+            <div class="dropdown">
+                <button class="dropdown-btn">회원 유형 선택 ▼</button>
+                <div class="dropdown-content">
+                    <a href="#">일반 회원</a>
+                    <a href="#">기업 회원</a>
+                    <a href="#">관리자</a>
+                </div>
+            </div>
+            <!-- ✅ 드롭다운 메뉴 끝 -->
+
+            <div class="spacer"></div>
+        </section>
+    </main>
+
+    <script>
+        // 간단한 토글 기능 (jQuery 사용 안 해도 됨)
+        const dropdownBtn = document.querySelector('.dropdown-btn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        dropdownBtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('show');
+        });
+
+        // 메뉴 외부 클릭 시 닫기
+        window.addEventListener('click', (e) => {
+            if (!e.target.matches('.dropdown-btn')) {
+                dropdownContent.classList.remove('show');
+            }
+        });
+    </script>
 </body>
+
 </html>
