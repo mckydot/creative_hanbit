@@ -1,82 +1,44 @@
-/* ✅ dropdown.css */
-/* 스타일 전체는 style.css의 폰트, 색상 변수를 그대로 사용 */
+/* ✅ dropdown.css (표준 <select> 기반 버전) */
+/* style.css의 폰트, 색상 변수 그대로 사용 */
 
 /* ============================= */
-/* 공통 드롭다운 스타일 */
+/* 공통 select 스타일 */
 /* ============================= */
-.dropdown {
-    position: relative;
-    display: inline-block;
+select {
     width: 100%;
-    margin-bottom: 22px;
+    font-family: 'Juache';
+    font-size: 15px;
+    color: #333;
+    background: #ffffff;
+    border: 1.5px solid var(--sky);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    outline: none;
+    appearance: none; /* 기본 화살표 제거 (브라우저별 차이 있음) */
+    cursor: pointer;
+    text-align: center;
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-/* 버튼 */
-.dropdown-btn {
-    width: 100%;
-    padding: 12px;
-    font-family: 'Juache';
+select:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
+}
+
+/* ============================= */
+/* 직업 선택 섹션 */
+/* ============================= */
+.job-field {
+    margin-bottom: 24px;
+}
+
+.job-label {
+    display: block;
+    margin-bottom: 10px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--sky);
-    background: var(--white);
-    border: 2px solid var(--sky);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-}
-
-.dropdown-btn:hover {
-    background: var(--sky);
-    color: var(--white);
-    box-shadow: 0 4px 10px rgba(24, 168, 241, 0.2);
-}
-
-/* 메뉴 박스 */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 110%;
-    left: 0;
-    width: 100%;
-    background-color: var(--white);
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    z-index: 10;
-    overflow: hidden;
-}
-
-/* 메뉴 항목 */
-.dropdown-content a {
-    display: block;
-    padding: 12px 14px;
+    color: var(--gray);
     font-family: 'Juache';
-    color: #333;
-    text-decoration: none;
-    transition: background 0.2s, color 0.2s;
-}
-
-.dropdown-content a:hover {
-    background-color: var(--sky);
-    color: var(--white);
-}
-
-/* 표시 상태 */
-.dropdown-content.show {
-    display: block;
-    animation: fadeIn 0.15s ease-out;
-}
-
-/* 부드러운 등장 효과 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 /* ============================= */
@@ -106,26 +68,6 @@
     border: 2px solid var(--sky);
 }
 
-.birth-select {
-    flex: 1;
-    font-family: 'Juache';
-    font-size: 15px;
-    color: #333;
-    background: #ffffff;
-    border: 1.5px solid var(--sky);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-    outline: none;
-    appearance: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.birth-select:focus {
-    border-color: var(--sky);
-    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
-}
-
 /* ============================= */
 /* 지역 선택 섹션 (시/구) */
 /* ============================= */
@@ -151,27 +93,6 @@
     padding: 16px;
     border-radius: var(--radius);
     border: 2px solid var(--sky);
-}
-
-/* ✅ 지역 전용 select (생년월일과 영향 안 겹침) */
-.region-field .region-select {
-    flex: 1;
-    font-family: 'Juache';
-    font-size: 15px;
-    color: #333;
-    background: #ffffff;
-    border: 1.5px solid var(--sky);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-    outline: none;
-    appearance: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.region-field .region-select:focus {
-    border-color: var(--sky);
-    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
 }
 
 /* ============================= */
