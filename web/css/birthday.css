@@ -1,0 +1,67 @@
+/* ✅ 생년월일 섹션 스타일 */
+.birth-field {
+    margin-bottom: 24px;
+}
+
+.birth-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+    font-family: 'Juache';
+}
+
+/* 하나의 통합된 필드 느낌 */
+.birth-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f8f8;
+    border: 2px solid var(--sky);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+
+/* 포커스 시 테두리 강조 */
+.birth-container:focus-within {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
+}
+
+/* select 공통 스타일 */
+.birth-select {
+    flex: 1;
+    padding: 8px 6px;
+    font-family: 'Juache';
+    font-size: 15px;
+    color: #333;
+    border: none;
+    background: transparent;
+    outline: none;
+    appearance: none;
+    /* 기본 화살표 제거 */
+    text-align: center;
+}
+
+/* 구분선 스타일 (년도/월/일 사이 슬래시) */
+.divider {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--sky);
+    padding: 0 4px;
+}
+
+/* 모바일 대응 */
+@media (max-width: 400px) {
+    .birth-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .divider {
+        display: none;
+    }
+}
