@@ -1,6 +1,9 @@
-/* dropdown.css */
+/* ✅ dropdown.css */
 /* 스타일 전체는 style.css의 폰트, 색상 변수를 그대로 사용 */
 
+/* ============================= */
+/* 공통 드롭다운 스타일 */
+/* ============================= */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -43,7 +46,7 @@
     overflow: hidden;
 }
 
-/* 메뉴 링크 */
+/* 메뉴 항목 */
 .dropdown-content a {
     display: block;
     padding: 12px 14px;
@@ -58,7 +61,7 @@
     color: var(--white);
 }
 
-/* show 클래스가 붙으면 표시 */
+/* 표시 상태 */
 .dropdown-content.show {
     display: block;
     animation: fadeIn 0.15s ease-out;
@@ -70,9 +73,113 @@
         opacity: 0;
         transform: translateY(-5px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ============================= */
+/* 생년월일 섹션 */
+/* ============================= */
+.birth-field {
+    margin-bottom: 24px;
+}
+
+.birth-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+    font-family: 'Juache';
+}
+
+/* 생년월일 전체를 감싸는 박스 */
+.birth-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background: #f8f8f8;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 2px solid var(--sky);
+}
+
+.birth-select {
+    flex: 1;
+    font-family: 'Juache';
+    font-size: 15px;
+    color: #333;
+    background: #ffffff;
+    border: 1.5px solid var(--sky);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.birth-select:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
+}
+
+/* ============================= */
+/* 지역 선택 섹션 (시/구) */
+/* ============================= */
+.region-field {
+    margin-bottom: 24px;
+}
+
+.region-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+    font-family: 'Juache';
+}
+
+/* 구역 전체 묶음 */
+.region-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: #f8f8f8;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 2px solid var(--sky);
+}
+
+/* ✅ 지역 전용 select (생년월일과 영향 안 겹침) */
+.region-field .region-select {
+    flex: 1;
+    font-family: 'Juache';
+    font-size: 15px;
+    color: #333;
+    background: #ffffff;
+    border: 1.5px solid var(--sky);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.region-field .region-select:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.15);
+}
+
+/* ============================= */
+/* 반응형 대응 */
+/* ============================= */
+@media (max-width: 480px) {
+    .birth-container,
+    .region-container {
+        flex-direction: column;
     }
 }
