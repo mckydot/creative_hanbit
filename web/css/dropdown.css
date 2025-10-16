@@ -104,3 +104,96 @@ select:focus {
         flex-direction: column;
     }
 }
+/* ✅ 키워드 추가 스타일 */
+.keyword-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+#keyword-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#addKeywordBtn {
+    padding: 10px 16px;
+    background-color: #3478f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#addKeywordBtn:hover {
+    background-color: #245ec7;
+}
+/* ✅ 키워드 입력 영역 */
+.keyword-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+/* ✅ 입력창 디자인 유지 */
+#keyword-input {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+/* ✅ 작고 깔끔한 추가 버튼 */
+.btn-mini {
+    padding: 6px 10px;
+    font-size: 13px;
+    background-color: var(--primary-color, #3478f6);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-mini:hover {
+    background-color: var(--primary-dark, #285ec4);
+}
+
+/* ✅ 키워드 목록 */
+.keyword-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.keyword-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f6f6f6;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* 삭제 버튼 (X 표시) */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+    color: #e74c3c;
+}
