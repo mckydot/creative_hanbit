@@ -297,3 +297,57 @@ const jobSelect = document.getElementById("job-select");
 jobSelect.addEventListener("change", () => {
   console.log("선택한 직업:", jobSelect.value);
 });
+
+// ✅ 키워드 관련 기능 스크립트
+
+const keywordInput = document.getElementById("keyword-input");
+const addKeywordBtn = document.getElementById("addKeywordBtn");
+const keywordList = document.getElementById("keyword-list");
+
+// 키워드를 저장할 배열
+let keywords = [];
+
+// ✅ 키워드 추가 버튼 클릭
+addKeywordBtn.addEventListener("click", () => {
+  const keyword = keywordInput.value.trim();
+
+  if (keyword === "") {
+    alert("키워드를 입력해주세요!");
+    return;
+  }
+
+  // 이미 추가된 키워드인지 확인
+  if (keywords.includes(keyword)) {
+    alert("이미 추가된 키워드입니다!");
+    keywordInput.value = "";
+    return;
+  }
+
+  // 배열에 추가
+  keywords.push(keyword);
+
+  // 화면에 표시
+  const li = document.createElement("li");
+  li.classList.add("keyword-item");
+  li.innerHTML = `
+        <span>${keyword}</span>
+        <button class="delete-btn" aria-label="삭제">✕</button>
+    `;
+
+  // 삭제 버튼 기능
+  li.querySelector(".delete-btn").addEventListener("click", () => {
+    keywords = keywords.filter((k) => k !== keyword);
+    li.remove();
+  });
+
+  keywordList.appendChild(li);
+  keywordInput.value = "";
+  console.log("현재 키워드 배열:", keywords);
+});
+
+registerBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  //각 항목별 value값 받아와서 db로 넘겨줘야함.
+
+  location.href = "main.html";
+});

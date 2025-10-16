@@ -65,7 +65,6 @@
                 </div>
             </div>
 
-            <!-- ✅ 회원 유형 드롭다운 -->
             <!-- ✅ 회원 직업 선택 -->
             <div class="field job-field">
                 <label for="job-select" class="job-label">회원 직업</label>
@@ -82,14 +81,15 @@
                 </div>
             </div>
 
-            <!-- 비밀번호 확인-->
-            <label class="field" for="password">
-                <label for="birth-year" class="birth-label">추가를 원하는 키워드를 적어주세요</label>
+            <div class="field keyword-field">
+                <label for="keyword-input" class="birth-label">추가를 원하는 키워드를 적어주세요</label>
+                <div class="keyword-container">
+                    <input id="keyword-input" type="text" placeholder="원하는 키워드를 입력하세요" />
+                    <button id="addKeywordBtn" type="button" class="btn-mini">추가</button>
+                </div>
+                <ul id="keyword-list" class="keyword-list"></ul>
+            </div>
 
-                <input id="passwordCheck" type="password" placeholder="원하는 키워드를 적어주세요。"
-                    autocomplete="current-password" />
-                <div class="underline" aria-hidden="true"></div>
-            </label>
 
             <button id="registerBtn" class="btn btn-primary">회원 가입</button>
 
@@ -97,8 +97,8 @@
         </section>
     </main>
 
-    <script src="./js/register2.js">
-    </script>
+    <script src="./js/register2.js"></script>
+    <script src="./js/keywords.js"></script>
 </body>
 
 </html>
