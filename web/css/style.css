@@ -6,7 +6,8 @@
 }
 
 :root {
-    --sky: #18a8f1;
+    --sky: #9cd6fd;
+    --sky2: #18a8f1;
     --gray: #787878;
     --white: #ffffff;
     --radius: 30px;
@@ -55,13 +56,13 @@ body {
     text-align: center;
     font-size: 56px;
     font-weight: 900;
-    color: var(--white);
+    color: var(--sky2);
     letter-spacing: -2px;
     text-shadow:
-        -3px -3px 0 var(--sky),
-        3px -3px 0 var(--sky),
-        -3px 3px 0 var(--sky),
-        3px 3px 0 var(--sky),
+        -3px -3px 0 var(--white),
+        3px -3px 0 var(--white),
+        -3px 3px 0 var(--white),
+        3px 3px 0 var(--white),
         0 0 8px rgba(24, 168, 241, 0.6);
 }
 
