@@ -12,3 +12,15 @@ settings.addEventListener("click", function (e) {
   e.preventDefault();
   location.href = "setting.html";
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
+
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  categoryButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      categoryButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+});
