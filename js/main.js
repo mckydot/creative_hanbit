@@ -24,3 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+// Lucide 아이콘이 완전히 로드된 뒤에 실행되도록
+window.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
+
+  // 북마크 버튼 클릭 기능
+  document.querySelectorAll(".bookmark-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("active");
+
+      // 애니메이션 효과
+      btn.animate([{ transform: "scale(1.3)" }, { transform: "scale(1)" }], {
+        duration: 250,
+        easing: "ease-out",
+      });
+    });
+  });
+});

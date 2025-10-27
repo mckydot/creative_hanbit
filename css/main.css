@@ -358,3 +358,38 @@
         padding: 7px 12px;
     }
 }
+
+/* 즐겨찾기 버튼 */
+/* ✅ 항상 보이게 하는 북마크 버튼 */
+.bookmark-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666; /* hover 없이도 항상 보임 */
+    font-size: 22px;
+    transition: all 0.25s ease;
+    z-index: 2; /* 혹시 다른 요소에 가려질 때 대비 */
+}
+
+/* hover 시 (PC 보조 효과) */
+.bookmark-btn:hover {
+    transform: scale(1.1);
+    color: #333;
+}
+
+/* 클릭 후 활성화된 상태 */
+.bookmark-btn.active {
+    color: #f4b400; /* 밝은 노란색 */
+    background-color: rgba(255, 223, 0, 0.2); /* 은은한 노란 배경 */
+    border-radius: 50%;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px rgba(244, 180, 0, 0.6);
+}
+
+/* job-card 안에서 절대위치가 제대로 적용되도록 */
+.job-card {
+    position: relative;
+}
