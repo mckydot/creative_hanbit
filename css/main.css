@@ -416,4 +416,27 @@
 /* job-card가 relative positioning을 가져야 함 */
 .job-card {
     position: relative;
+    padding-right: 50px; /* 북마크 공간 확보 */
+}
+
+/* 모바일 반응형 - 북마크와 제목 겹침 방지 */
+@media (max-width: 480px) {
+    .job-card {
+        padding-right: 45px; /* 모바일에서 북마크 공간 */
+    }
+    
+    .job-title {
+        padding-right: 5px; /* 제목이 북마크에 닿지 않도록 */
+        word-break: keep-all; /* 단어 단위로 줄바꿈 */
+    }
+    
+    .bookmark-btn {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .bookmark-btn i {
+        width: 20px;
+        height: 20px;
+    }
 }
