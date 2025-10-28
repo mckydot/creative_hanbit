@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 상단 네비게이션 버튼
   const mypageBtn = document.getElementById("mypage-btn");
   const settingsBtn = document.getElementById("settings-btn");
+  const calendarBtn = document.getElementById("calendar-btn");
 
   if (mypageBtn) {
     mypageBtn.addEventListener("click", (e) => {
@@ -13,7 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
       location.href = "myPage.html";
     });
   }
-
+  if (calendarBtn) {
+    calendarBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href = "calendar.html";
+    });
+  }
   if (settingsBtn) {
     settingsBtn.addEventListener("click", (e) => {
       e.preventDefault();

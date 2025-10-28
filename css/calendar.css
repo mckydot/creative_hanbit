@@ -1,0 +1,99 @@
+/* ✅ 기본 설정 (기존 스타일과 유사) */
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+    color: #333;
+}
+
+/* ✅ 메인 컨텐츠 */
+.mypage-main {
+    padding: 80px 16px 80px;
+    text-align: center;
+}
+
+.mypage-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* ✅ 달력 스타일 */
+.calendar-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.calendar-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ✅ 달력 그리드 */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calendar-grid div {
+    padding: 10px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* 요일 스타일 */
+.calendar-grid div.weekday {
+    font-weight: 600;
+    color: #888;
+}
+
+/* 날짜 스타일 */
+.calendar-grid div.day {
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.calendar-grid div.day:hover {
+    background-color: #e6f2ff;
+}
+
+/* 오늘 날짜 강조 */
+.calendar-grid div.today {
+    background-color: #4285f4;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+    .calendar-section {
+        max-width: 95%;
+        padding: 12px;
+    }
+
+    .calendar-grid div {
+        font-size: 13px;
+        padding: 8px 0;
+    }
+}
