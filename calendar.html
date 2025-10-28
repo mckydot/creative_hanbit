@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한빛모아 || 일정</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/calendar.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- ✅ 상단 내브바 -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <h1 class="app-name">한빛모아</h1>
+        </div>
+        <div class="navbar-right">
+            <button class="icon-btn" id="home-btn" aria-label="홈으로">
+                <i data-lucide="home"></i>
+            </button>
+            <button class="icon-btn" id="settings-btn" aria-label="설정">
+                <i data-lucide="settings"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ✅ 메인 컨텐츠 -->
+    <main class="mypage-main">
+        <h2 class="mypage-title">내 일정 달력</h2>
+
+        <!-- ✅ 달력 -->
+        <section class="calendar-section">
+            <div class="calendar-header">
+                <button id="prevMonth"><i data-lucide="chevron-left"></i></button>
+                <h3 id="monthYear"></h3>
+                <button id="nextMonth"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+    </main>
+
+    <!-- ✅ 하단 내브바 -->
+    <nav class="bottom-nav">
+        <button class="bottom-btn" id="ai-btn" aria-label="AI 기능">
+            <i data-lucide="bot"></i>
+            <span>AI</span>
+        </button>
+
+        <button class="bottom-btn" id="calendar-btn" aria-label="달력">
+            <i data-lucide="calendar"></i>
+            <span>달력</span>
+        </button>
+
+        <button class="bottom-btn home-btn" id="home-btn2" aria-label="홈">
+            <div class="home-icon">
+                <i data-lucide="home"></i>
+            </div>
+        </button>
+
+        <button class="bottom-btn" id="mypage-btn" aria-label="마이페이지">
+            <i data-lucide="user"></i>
+            <span>마이</span>
+        </button>
+
+        <button class="bottom-btn" id="settings-btn2" aria-label="설정">
+            <i data-lucide="settings"></i>
+            <span>설정</span>
+        </button>
+    </nav>
+
+    <script src="./js/calendar.js"></script>
+</body>
+</html>
