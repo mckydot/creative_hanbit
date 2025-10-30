@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,11 +26,11 @@
         </div>
     </header>
 
-    <!-- ✅ 메인 컨텐츠 -->
+    <!-- ✅ 메인 -->
     <main class="mypage-main">
         <h2 class="mypage-title">내 일정 달력</h2>
 
-        <!-- ✅ 달력 -->
+        <!-- 달력 -->
         <section class="calendar-section">
             <div class="calendar-header">
                 <button id="prevMonth"><i data-lucide="chevron-left"></i></button>
@@ -37,6 +38,24 @@
                 <button id="nextMonth"><i data-lucide="chevron-right"></i></button>
             </div>
             <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <!-- 일정 입력창 -->
+        <section class="schedule-input" id="scheduleInput">
+            <div class="schedule-input-content">
+                <button id="closeScheduleBtn" class="close-schedule-btn">
+                    <i data-lucide="x"></i>
+                </button>
+                <h4 id="selectedDateTitle"></h4>
+                <input type="text" id="scheduleText" placeholder="일정을 입력하세요" />
+                <button id="addScheduleBtn">추가</button>
+            </div>
+        </section>
+
+        <!-- ✅ 이번 달 일정 목록 -->
+        <section class="schedule-list-section">
+            <h3>이번 달 일정</h3>
+            <div id="scheduleList" class="schedule-list"></div>
         </section>
     </main>
 
@@ -71,4 +90,5 @@
 
     <script src="./js/calendar.js"></script>
 </body>
+
 </html>

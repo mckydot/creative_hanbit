@@ -1,4 +1,8 @@
-/* ✅ 기본 설정 (기존 스타일과 유사) */
+/* ✅ 기본 설정 */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Noto Sans KR", sans-serif;
     margin: 0;
@@ -9,91 +13,415 @@ body {
 
 /* ✅ 메인 컨텐츠 */
 .mypage-main {
-    padding: 80px 16px 80px;
-    text-align: center;
+    padding: 74px 16px 90px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .mypage-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #18a8f1;
 }
 
-/* ✅ 달력 스타일 */
+/* ✅ 달력 섹션 */
 .calendar-section {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 16px;
-    max-width: 400px;
-    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 20px 16px;
+    margin-bottom: 20px;
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 }
 
 .calendar-header h3 {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 700;
+    color: #18a8f1;
 }
 
 .calendar-header button {
     background: none;
     border: none;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #18a8f1;
+}
+
+.calendar-header button:hover {
+    background: #f0f9ff;
+}
+
+.calendar-header button:active {
+    transform: scale(0.95);
 }
 
 /* ✅ 달력 그리드 */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    gap: 4px;
 }
 
-.calendar-grid div {
-    padding: 10px 0;
-    border-radius: 8px;
+/* 요일 헤더 */
+.calendar-day-header {
+    padding: 8px 4px;
     text-align: center;
-    font-size: 14px;
-}
-
-/* 요일 스타일 */
-.calendar-grid div.weekday {
+    font-size: 12px;
     font-weight: 600;
     color: #888;
 }
 
-/* 날짜 스타일 */
-.calendar-grid div.day {
-    background-color: #f9f9f9;
+/* 날짜 칸 */
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    background: #f9fafb;
+    color: #333;
 }
 
-.calendar-grid div.day:hover {
-    background-color: #e6f2ff;
+.calendar-day.empty {
+    background: transparent;
+    cursor: default;
 }
 
-/* 오늘 날짜 강조 */
-.calendar-grid div.today {
-    background-color: #4285f4;
+.calendar-day:not(.empty):hover {
+    background: #e6f2ff;
+    transform: scale(1.05);
+}
+
+.calendar-day:not(.empty):active {
+    transform: scale(0.98);
+}
+
+/* 오늘 날짜 */
+.calendar-day.today {
+    background: linear-gradient(135deg, #18a8f1 0%, #9cd6fd 100%);
     color: #fff;
     font-weight: 700;
+    box-shadow: 0 2px 8px rgba(24, 168, 241, 0.3);
 }
 
-/* 모바일 반응형 */
+/* 일정이 있는 날 */
+.calendar-day.has-schedule {
+    background: linear-gradient(135deg, #ffd93d 0%, #ffed99 100%);
+    font-weight: 700;
+    position: relative;
+}
+
+.calendar-day.has-schedule::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #ff6b35;
+    border-radius: 50%;
+}
+
+/* ✅ 일정 입력창 */
+.schedule-input {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.schedule-input-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 32px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.25s ease;
+    max-height: 40vh;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.close-schedule-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #f3f4f6;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    transition: all 0.2s ease;
+}
+
+.close-schedule-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.close-schedule-btn:active {
+    transform: scale(0.9);
+}
+
+.close-schedule-btn i {
+    width: 18px;
+    height: 18px;
+}
+
+.schedule-input h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #18a8f1;
+}
+
+.schedule-input input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: "Noto Sans KR", sans-serif;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.schedule-input input:focus {
+    outline: none;
+    border-color: #18a8f1;
+    box-shadow: 0 0 0 3px rgba(24, 168, 241, 0.1);
+}
+
+.schedule-input button#addScheduleBtn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #18a8f1 0%, #9cd6fd 100%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.schedule-input button#addScheduleBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(24, 168, 241, 0.3);
+}
+
+.schedule-input button#addScheduleBtn:active {
+    transform: translateY(0);
+}
+
+/* ✅ 일정 목록 섹션 */
+.schedule-list-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 24px;
+}
+
+.schedule-list-section h3 {
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #18a8f1;
+}
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.schedule-item {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.schedule-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.schedule-date {
+    font-weight: 700;
+    color: #18a8f1;
+    font-size: 14px;
+    min-width: 60px;
+}
+
+.schedule-text {
+    flex: 1;
+    margin: 0 12px;
+    color: #333;
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: #fee;
+    border: 1px solid #fcc;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: #ef4444;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #fcc;
+    transform: scale(1.05);
+}
+
+.delete-btn:active {
+    transform: scale(0.95);
+}
+
+/* ✅ 모바일 반응형 */
 @media (max-width: 480px) {
-    .calendar-section {
-        max-width: 95%;
-        padding: 12px;
+    .mypage-main {
+        padding: 68px 12px 90px;
     }
 
-    .calendar-grid div {
+    .mypage-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .calendar-section {
+        padding: 16px 12px;
+        border-radius: 12px;
+    }
+
+    .calendar-header h3 {
+        font-size: 16px;
+    }
+
+    .calendar-day {
         font-size: 13px;
-        padding: 8px 0;
+        border-radius: 8px;
+    }
+
+    .calendar-day-header {
+        font-size: 11px;
+        padding: 6px 2px;
+    }
+
+    .schedule-input-content {
+        padding: 20px 16px 28px;
+    }
+
+    .schedule-input h4 {
+        font-size: 16px;
+        margin-bottom: 14px;
+    }
+
+    .schedule-input input {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    .schedule-input button#addScheduleBtn {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .schedule-list-section {
+        padding: 16px 12px;
+        border-radius: 12px;
+    }
+
+    .schedule-list-section h3 {
+        font-size: 16px;
+    }
+
+    .schedule-item {
+        padding: 12px 14px;
+        border-radius: 10px;
+    }
+
+    .schedule-date {
+        font-size: 13px;
+        min-width: 54px;
+    }
+
+    .schedule-text {
+        font-size: 13px;
+        margin: 0 8px;
+    }
+
+    .delete-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 360px) {
+    .calendar-day {
+        font-size: 12px;
+    }
+
+    .schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .schedule-text {
+        margin: 0;
+    }
+
+    .delete-btn {
+        align-self: flex-end;
     }
 }
