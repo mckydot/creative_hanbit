@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한빛모아 || 마이페이지</title>
+
+    <!-- ✅ 외부 CSS 연결 -->
+    <link rel="stylesheet" href="./css/mypage.css">
+
+    <!-- ✅ Lucide 아이콘 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- 상단 내브바 -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <h1 class="app-name">한빛모아</h1>
+        </div>
+
+        <div class="navbar-right">
+            <button class="icon-btn" id="mypage-btn" aria-label="마이페이지">
+                <i data-lucide="user"></i>
+            </button>
+            <button class="icon-btn" id="settings-btn" aria-label="설정">
+                <i data-lucide="settings"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 마이페이지 콘텐츠 -->
+    <main class="mypage-wrap">
+        <div class="mypage-container">
+            <!-- 프로필 카드 -->
+            <section class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-photo">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="프로필 사진" class="profile-img">
+                        <button class="photo-edit-btn" aria-label="사진 편집">
+                            <i data-lucide="camera"></i>
+                        </button>
+                    </div>
+                    <div class="profile-info">
+                        <h2 class="profile-name">김한빛</h2>
+                        <p class="profile-email">hanbit@email.com</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 기본 정보 -->
+            <section class="info-section">
+                <h3 class="section-title">
+                    <i data-lucide="info"></i>
+                    기본 정보
+                </h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">직업</div>
+                            <div class="info-value">대학생</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i data-lucide="cake"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">생년월일</div>
+                            <div class="info-value">2002년 3월 15일</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">거주지역</div>
+                            <div class="info-value">대전광역시 유성구</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="edit-btn">
+                    <i data-lucide="edit-3"></i>
+                    정보 수정하기
+                </button>
+            </section>
+
+            <!-- 관심 키워드 -->
+            <section class="keywords-section">
+                <h3 class="section-title">
+                    <i data-lucide="hash"></i>
+                    관심 키워드
+                </h3>
+                <div class="keywords-grid">
+                    <div class="keyword-tag">
+                        <i data-lucide="heart"></i>
+                        대외활동
+                    </div>
+                    <div class="keyword-tag">
+                        <i data-lucide="heart"></i>
+                        IT/개발
+                    </div>
+                    <div class="keyword-tag">
+                        <i data-lucide="heart"></i>
+                        공모전
+                    </div>
+                    <div class="keyword-tag">
+                        <i data-lucide="heart"></i>
+                        봉사활동
+                    </div>
+                    <div class="keyword-tag">
+                        <i data-lucide="heart"></i>
+                        인턴십
+                    </div>
+                    <button class="add-keyword-btn">
+                        <i data-lucide="plus"></i>
+                        추가하기
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 하단 내브바 -->
+    <nav class="bottom-nav">
+        <button class="bottom-btn" id="ai-btn" aria-label="AI 기능">
+            <i data-lucide="bot"></i>
+            <span>AI</span>
+        </button>
+
+        <button class="bottom-btn" id="calendar-btn" aria-label="달력">
+            <i data-lucide="calendar"></i>
+            <span>달력</span>
+        </button>
+
+        <button class="bottom-btn home-btn" id="home-btn" aria-label="홈">
+            <div class="home-icon">
+                <i data-lucide="home"></i>
+            </div>
+        </button>
+
+        <button class="bottom-btn" id="mypage-btn2" aria-label="마이페이지">
+            <i data-lucide="user"></i>
+            <span>마이</span>
+        </button>
+
+        <button class="bottom-btn" id="settings-btn2" aria-label="설정">
+            <i data-lucide="settings"></i>
+            <span>설정</span>
+        </button>
+    </nav>
+
+    <!-- ✅ 외부 JS 연결 -->
+    <script src="./js/mypage.js"></script>
+</body>
+
+</html>
