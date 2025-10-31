@@ -216,7 +216,7 @@ window.addEventListener("DOMContentLoaded", () => {
     location.href = "main.html";
   });
   mypage.addEventListener("click", () => {
-    location.href = "";
+    location.href = "mypage.html";
   });
   settings.addEventListener("click", () => {
     location.href = "setting.html";

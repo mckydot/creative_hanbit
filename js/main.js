@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const settings = document.getElementById("settings-btn2");
 
   mypage.addEventListener("click", () => {
-    location.href("");
+    location.href("mypage.html");
   });
   settings.addEventListener("click", () => {
     location.href = "setting.html";
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (mypageBtn) {
     mypageBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      location.href = "myPage.html";
+      location.href = "mypage.html";
     });
   }
   if (calendarBtn) {
