@@ -7,6 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const mypageBtn = document.getElementById("mypage-btn");
   const settingsBtn = document.getElementById("settings-btn");
   const calendarBtn = document.getElementById("calendar-btn");
+  const mypage = document.getElementById("mypage-btn2");
+  const settings = document.getElementById("settings-btn2");
+
+  mypage.addEventListener("click", () => {
+    location.href("");
+  });
+  settings.addEventListener("click", () => {
+    location.href = "setting.html";
+  });
 
   if (mypageBtn) {
     mypageBtn.addEventListener("click", (e) => {
