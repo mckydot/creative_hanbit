@@ -11,6 +11,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const addScheduleBtn = document.getElementById("addScheduleBtn");
   const scheduleList = document.getElementById("scheduleList");
   const closeScheduleBtn = document.getElementById("closeScheduleBtn");
+  const home = document.getElementById("home-btn2");
+  const homeTop = document.getElementById("home-btn");
+  const mypage = document.getElementById("mypage-btn");
+  const settingsTop = document.getElementById("settings-btn");
+  const settings = document.getElementById("settings-btn2");
 
   let today = new Date();
   let currentMonth = today.getMonth();
@@ -207,7 +212,21 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     renderCalendar(currentMonth, currentYear);
   });
-
+  home.addEventListener("click", () => {
+    location.href = "main.html";
+  });
+  mypage.addEventListener("click", () => {
+    location.href = "";
+  });
+  settings.addEventListener("click", () => {
+    location.href = "setting.html";
+  });
+  settingsTop.addEventListener("click", () => {
+    location.href = "setting.html";
+  });
+  homeTop.addEventListener("click", () => {
+    location.href = "main.html";
+  });
   // 초기 렌더링
   renderCalendar(currentMonth, currentYear);
 });
