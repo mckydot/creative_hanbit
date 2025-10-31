@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const settings = document.getElementById("settings-btn2");
 
   mypage.addEventListener("click", () => {
-    location.href("mypage.html");
+    location.href = "mypage.html";
   });
   settings.addEventListener("click", () => {
     location.href = "setting.html";
