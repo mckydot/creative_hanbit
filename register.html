@@ -13,6 +13,11 @@
         <section class="card" aria-label="로그인 화면">
             <h1 class="logo" aria-hidden="true">회원가입</h1>
 
+            <label class="field" for="email">
+                <input id="name" type="text" placeholder="이름" autocomplete="email" />
+                <div class="underline" aria-hidden="true"></div>
+            </label>
+
             <!-- 이메일 -->
             <label class="field" for="email">
                 <input id="email" type="email" placeholder="이메일 (example@domain.com)" autocomplete="email" />
@@ -21,7 +26,7 @@
 
             <!-- 비밀번호 -->
             <label class="field" for="password">
-                <input id="password" type="password" placeholder="비밀번호를 입력해주세요." autocomplete="current-password" />
+                <input id="password" type="password" placeholder="비밀번호" autocomplete="current-password" />
                 <div class="underline" aria-hidden="true"></div>
             </label>
             <!-- 비밀번호 확인-->

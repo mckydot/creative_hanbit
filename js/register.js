@@ -9,6 +9,8 @@ const monthSelect = document.getElementById("birth-month");
 const daySelect = document.getElementById("birth-day");
 const currentYear = new Date().getFullYear();
 
+const userName = document.getElementById("name");
+
 for (let y = currentYear; y >= 1950; y--) {
   yearSelect.insertAdjacentHTML(
     "beforeend",
@@ -374,9 +376,16 @@ registerBtn.addEventListener("click", async function (e) {
   } else {
     // ✅ 모든 유효성 검사를 통과한 경우만 서버에 요청
     const userData = {
-      username: "최강연최",
+      username: userName,
       email: emailVal,
       password: pwVal,
+      city: citySelect.value,
+      distcit: districtSelect.value,
+      year: yearSelect.value,
+      month: monthSelect.value,
+      day: daySelect.value,
+      job: jobSelect.value,
+      keywords: keywords,
     };
 
     try {

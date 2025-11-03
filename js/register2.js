@@ -349,5 +349,7 @@ registerBtn.addEventListener("click", function (e) {
   e.preventDefault();
   //각 항목별 value값 받아와서 db로 넘겨줘야함.
 
-  location.href = "main.html";
+  //location.href = "main.html";
+  console.log(citySelect.value);
+  console.log(districtSelect.value);
 });
