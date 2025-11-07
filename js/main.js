@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const calendarBtn = document.getElementById("calendar-btn");
   const mypage = document.getElementById("mypage-btn2");
   const settings = document.getElementById("settings-btn2");
+  const ai = document.getElementById("ai-btn");
+
+  ai.addEventListener("click", () => {
+    location.href = "ai.html";
+  });
 
   if (mypage)
     mypage.addEventListener("click", () => {
