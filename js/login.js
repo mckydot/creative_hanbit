@@ -58,8 +58,11 @@
         return;
       }
 
-      // ✅ 로그인 성공
-      if (data && data.success === "1") {
+      // ✅ 로그인 성공 → 토큰 저장
+      if (data && data.accessToken) {
+        // accessToken을 localStorage에 저장
+        localStorage.setItem("accessToken", data.accessToken);
+
         result.innerText = "✅ 로그인 성공! 메인 페이지로 이동합니다.";
         setTimeout(() => (location.href = "main.html"), 1000);
       } else {
