@@ -352,12 +352,12 @@ addKeywordBtn.addEventListener("click", () => {
   console.log("현재 키워드 배열:", keywords);
 });
 
-registerBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  //각 항목별 value값 받아와서 db로 넘겨줘야함.
+// registerBtn.addEventListener("click", function (e) {
+//   e.preventDefault();
+//   //각 항목별 value값 받아와서 db로 넘겨줘야함.
 
-  location.href = "main.html";
-});
+//   location.href = "main.html";
+// });
 
 registerBtn.addEventListener("click", async function (e) {
   e.preventDefault();
@@ -376,7 +376,7 @@ registerBtn.addEventListener("click", async function (e) {
   } else {
     // ✅ 모든 유효성 검사를 통과한 경우만 서버에 요청
     const userData = {
-      username: userName,
+      username: userName.value,
       email: emailVal,
       password: pwVal,
       city: citySelect.value,
@@ -390,7 +390,7 @@ registerBtn.addEventListener("click", async function (e) {
 
     try {
       const response = await fetch(
-        `http://192.168.0.165:8080/api/users/register`,
+        `http://192.168.218.193:8080/api/users/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -410,7 +410,7 @@ registerBtn.addEventListener("click", async function (e) {
 
       if (data.success == "1") {
         result.innerText = "✅ 회원가입 성공! 로그인 페이지로 이동합니다.";
-        setTimeout(() => (location.href = "register2.html"), 1500);
+        setTimeout(() => (location.href = "index.html"), 1500);
       } else {
         result.innerText = `❌ 회원가입 실패: ${data.message}`;
       }
