@@ -319,3 +319,149 @@
         height: 20px;
     }
 }
+/* ============================= */
+/* 플로팅 액션 버튼 오버레이 */
+/* ============================= */
+.fab-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(2px);
+}
+
+.fab-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+/* ============================= */
+/* 플로팅 액션 버튼 (FAB) */
+/* ============================= */
+.fab-container {
+    position: fixed;
+    bottom: 90px; /* 하단 내브바 위 */
+    right: 20px;
+    z-index: 1000;
+}
+
+.fab-main {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--sky2);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    color: white;
+}
+
+.fab-main i {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    stroke-width: 2.5; /* 선을 더 두껍게 */
+}
+
+.fab-main:hover {
+    background: #0056b3;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* ✅ active 상태: + 아이콘이 45도 회전하여 X로 변환 */
+.fab-main.active {
+    background: #dc3545; /* 빨간색으로 변경하여 닫기 의미 강조 */
+    transform: rotate(0deg); /* 버튼 자체는 회전 안함 */
+}
+
+.fab-main.active i {
+    transform: rotate(45deg); /* + 아이콘만 45도 회전 → X 모양 */
+    stroke-width: 3; /* 활성화 시 선을 더 굵게 */
+}
+
+.fab-main.active:hover {
+    background: #c82333;
+}
+
+/* FAB 메뉴 */
+.fab-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.fab-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.fab-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: none;
+    border-radius: 28px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font-family: 'Juache';
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.fab-option:hover {
+    background: #f8f9fa;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    transform: translateX(-5px);
+}
+
+.fab-option i {
+    width: 20px;
+    height: 20px;
+    color: var(--sky2);
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+    .fab-container {
+        bottom: 80px;
+        right: 16px;
+    }
+    
+    .fab-main {
+        width: 52px;
+        height: 52px;
+    }
+    
+    .fab-main i {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .fab-option {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}

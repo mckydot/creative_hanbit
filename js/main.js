@@ -99,3 +99,49 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+// =============================
+// 플로팅 액션 버튼 (FAB)
+// =============================
+const fabBtn = document.getElementById("fabBtn");
+const fabMenu = document.getElementById("fabMenu");
+const fabOverlay = document.getElementById("fabOverlay");
+const matchingBtn = document.getElementById("matchingBtn");
+const historyBtn = document.getElementById("historyBtn");
+
+// FAB 메뉴 토글
+fabBtn.addEventListener("click", () => {
+  fabBtn.classList.toggle("active");
+  fabMenu.classList.toggle("active");
+  fabOverlay.classList.toggle("active");
+});
+
+// 오버레이 클릭 시 메뉴 닫기
+fabOverlay.addEventListener("click", () => {
+  fabBtn.classList.remove("active");
+  fabMenu.classList.remove("active");
+  fabOverlay.classList.remove("active");
+});
+
+// 메뉴 외부 클릭 시 닫기
+document.addEventListener("click", (e) => {
+  if (
+    !e.target.closest(".fab-container") &&
+    !e.target.closest(".fab-overlay")
+  ) {
+    fabBtn.classList.remove("active");
+    fabMenu.classList.remove("active");
+    fabOverlay.classList.remove("active");
+  }
+});
+
+// 직원 매칭 시스템
+matchingBtn.addEventListener("click", () => {
+  alert("직원 매칭 시스템 페이지로 이동합니다.");
+  // location.href = 'matching.html';
+});
+
+// 작년 공지 확인
+historyBtn.addEventListener("click", () => {
+  alert("작년 공지 확인 페이지로 이동합니다.");
+  // location.href = 'history.html';
+});
