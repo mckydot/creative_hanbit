@@ -29,3 +29,7 @@ ai.addEventListener("click", () => {
 calendar.addEventListener("click", () => {
   location.href = "calendar.html";
 });
+// 뒤로가기 버튼
+document.getElementById("back-btn").addEventListener("click", function () {
+  location.href = "main.html";
+});

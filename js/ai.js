@@ -78,3 +78,8 @@ chatSendBtn.addEventListener("click", sendMessage);
 chatInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") sendMessage();
 });
+
+// 뒤로가기 버튼 기능
+document.getElementById("back-btn").addEventListener("click", function () {
+  location.href = "main.html";
+});
