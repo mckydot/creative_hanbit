@@ -12,6 +12,9 @@
     <!-- ✅ 상단 내브바 -->
     <header class="navbar">
         <div class="navbar-left">
+            <button class="icon-btn" id="back-btn" aria-label="뒤로가기">
+                <i data-lucide="arrow-left"></i>
+            </button>
             <h1 class="app-name">한빛모아</h1>
         </div>
 
@@ -25,37 +28,27 @@
         </div>
     </header>
 
-    
+<!-- ✅ AI 채팅 영역 -->
+<div class="chat-wrap">
+    <div class="chat-messages" id="chatMessages"></div>
 
-    <!-- ✅ 하단 내브바 -->
-    <nav class="bottom-nav">
-        <button class="bottom-btn" id="ai-btn" aria-label="AI 기능">
-            <i data-lucide="bot"></i>
-            <span>AI</span>
+    <div class="chat-input-wrap">
+        <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." />
+        <button id="chatSendBtn" aria-label="보내기">
+            <i data-lucide="send"></i>
         </button>
+    </div>
+</div>
 
-        <button class="bottom-btn" id="calendar-btn" aria-label="달력">
-            <i data-lucide="calendar"></i>
-            <span>달력</span>
-        </button>
+    <script>
+        // Lucide 아이콘 초기화
+        lucide.createIcons();
 
-        <button class="bottom-btn home-btn" id="home-btn" aria-label="홈">
-            <div class="home-icon">
-                <i data-lucide="home"></i>
-            </div>
-        </button>
-
-        <button class="bottom-btn" id="mypage-btn2" aria-label="마이페이지">
-            <i data-lucide="user"></i>
-            <span>마이</span>
-        </button>
-
-        <button class="bottom-btn" id="settings-btn2" aria-label="설정">
-            <i data-lucide="settings"></i>
-            <span>설정</span>
-        </button>
-    </nav>
-
+        // 뒤로가기 버튼 기능
+        document.getElementById('back-btn').addEventListener('click', function() {
+            location.href = 'main.html';
+        });
+    </script>
     <script src="js/ai.js"></script>
 </body>
 </html>

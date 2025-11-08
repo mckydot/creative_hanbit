@@ -49,3 +49,32 @@ if (settingsBtn)
     e.preventDefault();
     location.href = "setting.html";
   });
+
+const chatInput = document.getElementById("chatInput");
+const chatSendBtn = document.getElementById("chatSendBtn");
+const chatMessages = document.getElementById("chatMessages");
+
+function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  // 메시지 생성
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("my-message");
+  msgDiv.textContent = msg;
+
+  // 메시지 추가
+  chatMessages.appendChild(msgDiv);
+
+  // 스크롤 아래로
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // 입력 초기화
+  chatInput.value = "";
+}
+
+chatSendBtn.addEventListener("click", sendMessage);
+
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
