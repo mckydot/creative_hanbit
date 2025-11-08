@@ -3,9 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>한빛모아 || 설정</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/setting.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    
+    <!-- ✅ 상단 내브바 -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <button class="icon-btn" id="back-btn" aria-label="뒤로가기">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <h1 class="app-name">한빛모아</h1>
+        </div>
+
+        <div class="navbar-right">
+            <button class="icon-btn" id="mypage-btn" aria-label="마이페이지">
+                <i data-lucide="user"></i>
+            </button>
+            <button class="icon-btn" id="settings-btn" aria-label="설정">
+                <i data-lucide="settings"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ✅ 설정 메뉴 영역 -->
+    <main class="settings-container">
+        <!-- 프로필 수정 -->
+        <button class="setting-item" id="profile-edit">
+            <span>프로필 수정</span>
+            <i data-lucide="chevron-right"></i>
+        </button>
+
+        <!-- 로그아웃 -->
+        <button class="setting-item" id="logout">
+            <span>로그아웃</span>
+            <i data-lucide="chevron-right"></i>
+        </button>
+
+        <!-- 회원 탈퇴 -->
+        <button class="setting-item" id="withdraw">
+            <span>회원 탈퇴</span>
+            <i data-lucide="chevron-right"></i>
+        </button>
+
+        <!-- 구분선 -->
+        <div class="divider"></div>
+
+        <!-- 푸시 알림 받기 -->
+        <div class="setting-item toggle-item">
+            <span>푸시 알림 받기</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="push-notification" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- 맞춤 공고 알림 -->
+        <div class="setting-item toggle-item">
+            <span>맞춤 공고 알림</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="custom-notification" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- 구분선 -->
+        <div class="divider"></div>
+
+        <!-- 공지사항 -->
+        <button class="setting-item" id="notice">
+            <span>공지사항</span>
+            <i data-lucide="chevron-right"></i>
+        </button>
+
+        <!-- 서비스 이용약관 -->
+        <button class="setting-item" id="terms">
+            <span>서비스 이용약관</span>
+            <i data-lucide="chevron-right"></i>
+        </button>
+
+        <!-- 버전 정보 -->
+        <div class="setting-item version-item">
+            <span>버전 정보</span>
+            <span class="version">v1.0.0</span>
+        </div>
+    </main>
+
+    <!-- ✅ 하단 내브바 -->
+    <nav class="bottom-nav">
+        <button class="bottom-btn" id="ai-btn" aria-label="AI 기능">
+            <i data-lucide="bot"></i>
+            <span>AI</span>
+        </button>
+
+        <button class="bottom-btn" id="calendar-btn" aria-label="달력">
+            <i data-lucide="calendar"></i>
+            <span>달력</span>
+        </button>
+
+        <button class="bottom-btn home-btn" id="home-btn" aria-label="홈">
+            <div class="home-icon">
+                <i data-lucide="home"></i>
+            </div>
+        </button>
+
+        <button class="bottom-btn" id="mypage-btn2" aria-label="마이페이지">
+            <i data-lucide="user"></i>
+            <span>마이</span>
+        </button>
+
+        <button class="bottom-btn active" id="settings-btn2" aria-label="설정">
+            <i data-lucide="settings"></i>
+            <span>설정</span>
+        </button>
+    </nav>
+
+    <script>
+        // Lucide 아이콘 초기화
+        //lucide.createIcons();
+
+        // 뒤로가기 버튼
+        document.getElementById('back-btn').addEventListener('click', function() {
+            location.href = 'main.html';
+        });
+
+        // // 네비게이션
+        // document.getElementById('ai-btn').addEventListener('click', () => location.href = 'ai.html');
+        // document.getElementById('home-btn').addEventListener('click', () => location.href = 'main.html');
+        // document.getElementById('mypage-btn').addEventListener('click', () => location.href = 'mypage.html');
+        // document.getElementById('mypage-btn2').addEventListener('click', () => location.href = 'mypage.html');
+    </script>
+    <script src="js/setting.js"></script>
 </body>
 </html>

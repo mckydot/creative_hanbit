@@ -1,0 +1,88 @@
+/* 채팅 전체 랩 */
+.chat-wrap {
+    position: fixed;
+    top: 60px; /* 상단 내브바 바로 아래에 붙음 */
+    bottom: 0; /* 화면 맨 아래까지 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%; /* 전체 너비 */
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff; /* 깔끔한 흰색 배경 */
+    overflow: hidden;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* 메시지 표시 영역 */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scroll-behavior: smooth;
+}
+
+/* 내 메시지 스타일 */
+.chat-messages .my-message {
+    align-self: flex-end;
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 18px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 입력창 랩 */
+.chat-input-wrap {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background-color: #fff;
+    border-top: 1px solid #e5e5e5; /* 은은한 구분선 */
+}
+
+/* 입력창 */
+#chatInput {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+}
+
+/* 보내기 버튼 */
+#chatSendBtn {
+    background-color: #007BFF;
+    border: none;
+    margin-left: 8px;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: background 0.2s ease;
+}
+/* 상단 네브바 왼쪽 영역 정렬 */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 뒤로가기 버튼과 텍스트 사이 간격 */
+}
+#chatSendBtn:hover {
+    background-color: #0056b3;
+}
+
+#chatSendBtn i {
+    width: 20px;
+    height: 20px;
+}

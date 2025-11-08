@@ -212,6 +212,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     renderCalendar(currentMonth, currentYear);
   });
+  const ai = document.getElementById("ai-btn");
+
+  ai.addEventListener("click", () => {
+    location.href = "ai.html";
+  });
+
   home.addEventListener("click", () => {
     location.href = "main.html";
   });

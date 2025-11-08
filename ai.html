@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한빛 모아 || AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ai.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- ✅ 상단 내브바 -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <button class="icon-btn" id="back-btn" aria-label="뒤로가기">
+                <i data-lucide="arrow-left"></i>
+            </button>
+            <h1 class="app-name">한빛모아</h1>
+        </div>
+
+        <div class="navbar-right">
+            <button class="icon-btn" id="mypage-btn" aria-label="마이페이지">
+                <i data-lucide="user"></i>
+            </button>
+            <button class="icon-btn" id="settings-btn" aria-label="설정">
+                <i data-lucide="settings"></i>
+            </button>
+        </div>
+    </header>
+
+<!-- ✅ AI 채팅 영역 -->
+<div class="chat-wrap">
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-wrap">
+        <input type="text" id="chatInput" placeholder="메시지를 입력하세요..." />
+        <button id="chatSendBtn" aria-label="보내기">
+            <i data-lucide="send"></i>
+        </button>
+    </div>
+</div>
+
+    <script>
+        // Lucide 아이콘 초기화
+        lucide.createIcons();
+
+        // 뒤로가기 버튼 기능
+        document.getElementById('back-btn').addEventListener('click', function() {
+            location.href = 'main.html';
+        });
+    </script>
+    <script src="js/ai.js"></script>
+</body>
+</html>

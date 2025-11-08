@@ -14,7 +14,7 @@ settings.addEventListener("click", () => (location.href = "setting.html"));
 calendar.addEventListener("click", () => (location.href = "calendar.html"));
 mypage2.addEventListener("click", () => (location.href = "mypage.html"));
 home.addEventListener("click", () => (location.href = "main.html"));
-ai.addEventListener("click", () => (location.href = ""));
+ai.addEventListener("click", () => (location.href = "ai.html"));
 settings2.addEventListener("click", () => (location.href = "setting.html"));
 
 // ✅ 버튼 이벤트 예시
@@ -36,7 +36,7 @@ async function loadUserInfo() {
 
   if (!token) {
     alert("로그인이 필요합니다.");
-    location.href = "login.html";
+    location.href = "index.html";
     return;
   }
 
@@ -54,7 +54,7 @@ async function loadUserInfo() {
       if (response.status === 401 || response.status === 403) {
         alert("세션이 만료되었습니다. 다시 로그인해주세요.");
         localStorage.removeItem("accessToken");
-        location.href = "login.html";
+        location.href = "index.html";
         return;
       }
       throw new Error("서버 오류 발생");
