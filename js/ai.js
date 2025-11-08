@@ -8,11 +8,11 @@ const mypage = document.getElementById("mypage-btn2");
 const settings = document.getElementById("settings-btn2");
 const ai = document.getElementById("ai-btn");
 const home = document.getElementById("home-btn");
+
 const API_URL =
   "https://kullm-chatbot-api2025-production.up.railway.app/api/chat";
-// home.addEventListener("clcik", () => {
-//   location.href = "main.html";
-// });
+
+// ===== 페이지 네비게이션 =====
 if (home)
   home.addEventListener("click", () => {
     location.href = "main.html";
@@ -51,27 +51,55 @@ if (settingsBtn)
     location.href = "setting.html";
   });
 
+// ===== 채팅 관련 =====
 const chatInput = document.getElementById("chatInput");
 const chatSendBtn = document.getElementById("chatSendBtn");
 const chatMessages = document.getElementById("chatMessages");
 
+// ✅ 메시지 추가 함수
+function addMessage(text, sender = "user") {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("chat-message", sender);
+  msgDiv.textContent = text;
+  chatMessages.appendChild(msgDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return msgDiv;
+}
+
+// ✅ 초기 AI 인사 메시지
+window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    addMessage(
+      "안녕하세요! 👋 \n저는 한빛모아의 AI 도우미입니다.\n무엇을 도와드릴까요?\n\n예시)\n- 25세 청년 지원 정책 추천해줘\n- 30세 면접 관련 정책 추천해줘",
+      "bot"
+    );
+  }, 400);
+});
+
+// ✅ 로딩 메시지 추가 함수
+function showLoading() {
+  const loadingDiv = document.createElement("div");
+  loadingDiv.classList.add("chat-message", "bot", "loading");
+  loadingDiv.innerHTML = `
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  `;
+  chatMessages.appendChild(loadingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return loadingDiv;
+}
+
+// ✅ 메시지 전송
 async function sendMessage() {
   const msg = chatInput.value.trim();
   if (!msg) return;
 
-  // 메시지 생성
-  const msgDiv = document.createElement("div");
-  msgDiv.classList.add("my-message");
-  msgDiv.textContent = msg;
-
-  // 메시지 추가
-  chatMessages.appendChild(msgDiv);
-
-  // 스크롤 아래로
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-
-  // 입력 초기화
+  addMessage(msg, "user");
   chatInput.value = "";
+
+  // 로딩 표시
+  const loadingDiv = showLoading();
 
   try {
     const response = await fetch(API_URL, {
@@ -79,34 +107,40 @@ async function sendMessage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        message: msg,
-      }),
+      body: JSON.stringify({ message: msg }),
       signal: AbortSignal.timeout(120000),
     });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
     const data = await response.json();
-    if (data.status === "success") {
-      console.log(data.response);
+
+    // 로딩 제거
+    loadingDiv.remove();
+
+    if (data.status === "success" && data.response) {
+      addMessage(data.response, "bot");
     } else {
-      console.error("API 오류:", data.error);
-      return "죄송합니다. 오류가 발생했습니다.";
+      addMessage("죄송합니다. 오류가 발생했습니다.", "bot");
     }
   } catch (error) {
     console.error("네트워크 오류:", error);
-
+    loadingDiv.remove();
     if (error.name === "TimeoutError") {
-      return "⏱️ 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.";
+      addMessage(
+        "⏱️ 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.",
+        "bot"
+      );
+    } else {
+      addMessage("네트워크 오류가 발생했습니다. 다시 시도해주세요.", "bot");
     }
-    return "네트워크 오류가 발생했습니다. 다시 시도해주세요.";
   }
 }
 
+// ===== 이벤트 등록 =====
 chatSendBtn.addEventListener("click", sendMessage);
-
 chatInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") sendMessage();
 });
