@@ -1,15 +1,25 @@
+// ✅ Supabase 회원가입 스크립트
+
+// Supabase 설정
+const SUPABASE_URL = "https://bawmwecykdaqsjklyjhb.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhd213ZWN5a2RhcXNqa2x5amhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5NjgxNzQsImV4cCI6MjA3NzU0NDE3NH0.KtTxYldOR_VCjUvI5BiAGBENkqHFRmApWM67PdKbGYQ";
+
+// Supabase 클라이언트 초기화
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const passwordCheck = document.getElementById("passwordCheck");
 const registerBtn = document.getElementById("registerBtn");
 const result = document.getElementById("result");
+const userName = document.getElementById("name");
+
 /* ✅ 생년월일 자동 채우기 */
 const yearSelect = document.getElementById("birth-year");
 const monthSelect = document.getElementById("birth-month");
 const daySelect = document.getElementById("birth-day");
 const currentYear = new Date().getFullYear();
-
-const userName = document.getElementById("name");
 
 for (let y = currentYear; y >= 1950; y--) {
   yearSelect.insertAdjacentHTML(
@@ -299,22 +309,20 @@ citySelect.addEventListener("change", () => {
     });
   }
 });
+
 // ✅ 직업 선택 값 확인용
 const jobSelect = document.getElementById("job-select");
 jobSelect.addEventListener("change", () => {
   console.log("선택한 직업:", jobSelect.value);
 });
 
-// ✅ 키워드 관련 기능 스크립트
-
+// ✅ 키워드 관련 기능
 const keywordInput = document.getElementById("keyword-input");
 const addKeywordBtn = document.getElementById("addKeywordBtn");
 const keywordList = document.getElementById("keyword-list");
 
-// 키워드를 저장할 배열
 let keywords = [];
 
-// ✅ 키워드 추가 버튼 클릭
 addKeywordBtn.addEventListener("click", () => {
   const keyword = keywordInput.value.trim();
 
@@ -323,25 +331,21 @@ addKeywordBtn.addEventListener("click", () => {
     return;
   }
 
-  // 이미 추가된 키워드인지 확인
   if (keywords.includes(keyword)) {
     alert("이미 추가된 키워드입니다!");
     keywordInput.value = "";
     return;
   }
 
-  // 배열에 추가
   keywords.push(keyword);
 
-  // 화면에 표시
   const li = document.createElement("li");
   li.classList.add("keyword-item");
   li.innerHTML = `
-        <span>${keyword}</span>
-        <button class="delete-btn" aria-label="삭제">✕</button>
-    `;
+    <span>${keyword}</span>
+    <button class="delete-btn" aria-label="삭제">✕</button>
+  `;
 
-  // 삭제 버튼 기능
   li.querySelector(".delete-btn").addEventListener("click", () => {
     keywords = keywords.filter((k) => k !== keyword);
     li.remove();
@@ -352,72 +356,123 @@ addKeywordBtn.addEventListener("click", () => {
   console.log("현재 키워드 배열:", keywords);
 });
 
-// registerBtn.addEventListener("click", function (e) {
-//   e.preventDefault();
-//   //각 항목별 value값 받아와서 db로 넘겨줘야함.
-
-//   location.href = "main.html";
-// });
-
+// ✅ 회원가입 버튼 클릭
 registerBtn.addEventListener("click", async function (e) {
   e.preventDefault();
 
+  const nameVal = userName.value.trim();
   const emailVal = email.value.trim();
   const pwVal = password.value.trim();
   const pwCheckVal = passwordCheck.value.trim();
+  const cityVal = citySelect.value;
+  const districtVal = districtSelect.value;
+  const yearVal = yearSelect.value;
+  const monthVal = monthSelect.value;
+  const dayVal = daySelect.value;
+  const jobVal = jobSelect.value;
 
-  // ⚙️ 간단한 유효성 검사
+  // ⚙️ 유효성 검사
+  if (nameVal === "") {
+    result.innerText = "이름을 입력해주세요.";
+    return;
+  }
   if (emailVal === "") {
     result.innerText = "이메일을 입력해주세요.";
-  } else if (pwVal === "") {
+    return;
+  }
+  if (pwVal === "") {
     result.innerText = "비밀번호를 입력해주세요.";
-  } else if (pwVal !== pwCheckVal) {
+    return;
+  }
+  if (pwVal !== pwCheckVal) {
     result.innerText = "비밀번호가 일치하지 않습니다.";
-  } else {
-    // ✅ 모든 유효성 검사를 통과한 경우만 서버에 요청
-    const userData = {
-      username: userName.value,
+    return;
+  }
+  if (!cityVal || !districtVal) {
+    result.innerText = "지역을 선택해주세요.";
+    return;
+  }
+  if (!yearVal || !monthVal || !dayVal) {
+    result.innerText = "생년월일을 선택해주세요.";
+    return;
+  }
+  if (!jobVal) {
+    result.innerText = "직업을 선택해주세요.";
+    return;
+  }
+
+  try {
+    console.log("🔐 Supabase 회원가입 시도:", emailVal);
+
+    // 1️⃣ Supabase Auth에 사용자 등록 (이메일 인증 비활성화)
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: emailVal,
       password: pwVal,
-      city: citySelect.value,
-      distcit: districtSelect.value,
-      year: yearSelect.value,
-      month: monthSelect.value,
-      day: daySelect.value,
-      job: jobSelect.value,
-      keywords: keywords,
-    };
+      options: {
+        emailRedirectTo: undefined,
+        data: {
+          email_confirmed: true,
+        },
+      },
+    });
 
-    try {
-      const response = await fetch(
-        `http://192.168.218.193:8080/api/users/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        }
-      );
+    console.log("📥 Auth 응답:", { authData, authError });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        result.innerText = `❌ 회원가입 실패: ${
-          errData.message || "서버 오류"
-        }`;
-        return;
-      }
+    if (authError) {
+      console.error("❌ 회원가입 실패:", authError);
 
-      const data = await response.json();
-
-      if (data.success == "1") {
-        result.innerText = "✅ 회원가입 성공! 로그인 페이지로 이동합니다.";
-        setTimeout(() => (location.href = "index.html"), 1500);
+      let errorMsg = "회원가입에 실패했습니다.";
+      if (authError.message.includes("already registered")) {
+        errorMsg = "이미 가입된 이메일입니다.";
+      } else if (authError.message.includes("Password should be")) {
+        errorMsg = "비밀번호는 최소 6자 이상이어야 합니다.";
       } else {
-        result.innerText = `❌ 회원가입 실패: ${data.message}`;
+        errorMsg = authError.message;
       }
-    } catch (error) {
-      console.error("서버 통신 오류:", error);
-      result.innerText =
-        "🚨 서버에 연결할 수 없습니다. 백엔드가 실행 중인가요?";
+
+      result.innerText = `❌ ${errorMsg}`;
+      return;
     }
+
+    // 2️⃣ 사용자 정보를 users 테이블에 저장
+    const userId = authData.user.id;
+    const birthDate = `${yearVal}-${String(monthVal).padStart(2, "0")}-${String(
+      dayVal
+    ).padStart(2, "0")}`;
+
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .insert([
+        {
+          id: userId,
+          email: emailVal,
+          username: nameVal,
+          city: cityVal,
+          district: districtVal,
+          birth_date: birthDate,
+          job: jobVal,
+          keywords: keywords, // JSON 배열로 저장
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+    console.log("📥 User 데이터 저장:", { userData, userError });
+
+    if (userError) {
+      console.error("❌ 사용자 정보 저장 실패:", userError);
+      result.innerText = `❌ 사용자 정보 저장 실패: ${userError.message}`;
+      return;
+    }
+
+    console.log("✅ 회원가입 성공!");
+    result.innerText = "✅ 회원가입 성공! 로그인 페이지로 이동합니다.";
+
+    setTimeout(() => {
+      location.href = "index.html";
+    }, 1500);
+  } catch (error) {
+    console.error("🚨 예외 발생:", error);
+    console.error("🚨 에러 스택:", error.stack);
+    result.innerText = "🚨 서버에 연결할 수 없습니다.";
   }
 });

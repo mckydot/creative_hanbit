@@ -90,7 +90,6 @@ function showLoading() {
   return loadingDiv;
 }
 
-// ✅ 메시지 전송
 async function sendMessage() {
   const msg = chatInput.value.trim();
   if (!msg) return;
@@ -98,33 +97,38 @@ async function sendMessage() {
   addMessage(msg, "user");
   chatInput.value = "";
 
-  // 로딩 표시
   const loadingDiv = showLoading();
 
   try {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: msg }),
       signal: AbortSignal.timeout(120000),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    const data = await response.json();
-
-    // 로딩 제거
-    loadingDiv.remove();
-
-    if (data.status === "success" && data.response) {
-      addMessage(data.response, "bot");
+    // 🔹 Content-Type 확인 후 JSON / HTML 처리
+    const contentType = response.headers.get("Content-Type") || "";
+    let data;
+    if (contentType.includes("application/json")) {
+      data = await response.json();
+      if (data.status === "success" && data.response) {
+        addMessage(data.response, "bot");
+      } else {
+        addMessage("죄송합니다. 오류가 발생했습니다.", "bot");
+      }
+    } else if (contentType.includes("text/html")) {
+      // HTML 응답이면 innerHTML로 렌더링
+      const html = await response.text();
+      const msgDiv = addMessage("", "bot");
+      msgDiv.innerHTML = html;
     } else {
-      addMessage("죄송합니다. 오류가 발생했습니다.", "bot");
+      addMessage("알 수 없는 형식의 응답입니다.", "bot");
     }
+
+    loadingDiv.remove();
   } catch (error) {
     console.error("네트워크 오류:", error);
     loadingDiv.remove();
