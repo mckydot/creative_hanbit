@@ -1,4 +1,41 @@
-window.addEventListener("DOMContentLoaded", () => {
+// Supabase 설정
+const SUPABASE_URL = "https://bawmwecykdaqsjklyjhb.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhd213ZWN5a2RhcXNqa2x5amhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5NjgxNzQsImV4cCI6MjA3NzU0NDE3NH0.KtTxYldOR_VCjUvI5BiAGBENkqHFRmApWM67PdKbGYQ";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+window.addEventListener("DOMContentLoaded", async () => {
+  // ✅ 로그인 체크
+  const accessToken = localStorage.getItem("accessToken");
+  const userId = localStorage.getItem("userId");
+  const userEmail = localStorage.getItem("userEmail");
+
+  if (!accessToken || !userId) {
+    alert("로그인이 필요한 서비스입니다.");
+    location.href = "login.html";
+    return;
+  }
+
+  // ✅ Supabase 세션 확인 (선택적)
+  try {
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+    if (error || !session) {
+      console.warn("세션이 만료되었습니다.");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userEmail");
+      alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+      location.href = "login.html";
+      return;
+    }
+  } catch (error) {
+    console.error("세션 확인 오류:", error);
+  }
+
   lucide.createIcons();
 
   const monthYear = document.getElementById("monthYear");
@@ -22,10 +59,76 @@ window.addEventListener("DOMContentLoaded", () => {
   let currentYear = today.getFullYear();
   let selectedDate = null;
 
-  let schedules = JSON.parse(localStorage.getItem("schedules")) || {};
+  let schedules = {};
 
-  function saveSchedules() {
-    localStorage.setItem("schedules", JSON.stringify(schedules));
+  // ✅ Supabase에서 일정 불러오기
+  async function loadSchedules() {
+    try {
+      const { data, error } = await supabase
+        .from("schedules")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      schedules = {};
+      data.forEach((item) => {
+        if (!schedules[item.date]) {
+          schedules[item.date] = [];
+        }
+        schedules[item.date].push({
+          id: item.id,
+          text: item.schedule_text,
+        });
+      });
+
+      renderCalendar(currentMonth, currentYear);
+    } catch (error) {
+      console.error("일정 불러오기 오류:", error);
+      alert("일정을 불러오는 중 오류가 발생했습니다.");
+    }
+  }
+
+  // ✅ 일정 추가 (Supabase)
+  async function addSchedule(date, text) {
+    try {
+      const { data, error } = await supabase
+        .from("schedules")
+        .insert([{ user_id: userId, date: date, schedule_text: text }])
+        .select();
+
+      if (error) throw error;
+
+      if (!schedules[date]) {
+        schedules[date] = [];
+      }
+      schedules[date].push({
+        id: data[0].id,
+        text: text,
+      });
+
+      renderCalendar(currentMonth, currentYear);
+    } catch (error) {
+      console.error("일정 추가 오류:", error);
+      alert("일정 추가 중 오류가 발생했습니다.");
+    }
+  }
+
+  // ✅ 일정 삭제 (Supabase)
+  async function deleteSchedule(id, dateKey) {
+    try {
+      const { error } = await supabase.from("schedules").delete().eq("id", id);
+
+      if (error) throw error;
+
+      schedules[dateKey] = schedules[dateKey].filter((item) => item.id !== id);
+      if (schedules[dateKey].length === 0) delete schedules[dateKey];
+
+      renderCalendar(currentMonth, currentYear);
+    } catch (error) {
+      console.error("일정 삭제 오류:", error);
+      alert("일정 삭제 중 오류가 발생했습니다.");
+    }
   }
 
   // ✅ 일정 입력창 닫기 함수
@@ -146,13 +249,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
     filtered.forEach((dateKey) => {
       const [y, m, d] = dateKey.split("-");
-      schedules[dateKey].forEach((text, idx) => {
+      schedules[dateKey].forEach((item) => {
         const div = document.createElement("div");
         div.classList.add("schedule-item");
         div.innerHTML = `
                 <span class="schedule-date">${m}월 ${d}일</span>
-                <span class="schedule-text">${text}</span>
-                <button class="delete-btn" data-key="${dateKey}" data-idx="${idx}">삭제</button>
+                <span class="schedule-text">${item.text}</span>
+                <button class="delete-btn" data-id="${item.id}" data-key="${dateKey}">삭제</button>
             `;
         scheduleList.appendChild(div);
       });
@@ -161,34 +264,26 @@ window.addEventListener("DOMContentLoaded", () => {
     // 삭제 기능
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
+        const id = e.target.dataset.id;
         const key = e.target.dataset.key;
-        const idx = e.target.dataset.idx;
-        schedules[key].splice(idx, 1);
-        if (schedules[key].length === 0) delete schedules[key];
-        saveSchedules();
-        renderCalendar(currentMonth, currentYear);
+        deleteSchedule(id, key);
       });
     });
   }
 
   // ✅ 일정 추가 버튼 클릭
-  addScheduleBtn.addEventListener("click", () => {
+  addScheduleBtn.addEventListener("click", async () => {
     const text = scheduleText.value.trim();
     if (!text || !selectedDate) return;
 
-    if (!schedules[selectedDate]) {
-      schedules[selectedDate] = [];
-    }
-    schedules[selectedDate].push(text);
-    saveSchedules();
-    renderCalendar(currentMonth, currentYear);
+    await addSchedule(selectedDate, text);
     closeScheduleInput();
   });
 
   // ✅ 닫기 버튼 클릭
   closeScheduleBtn.addEventListener("click", closeScheduleInput);
 
-  // ✅ 배경 클릭 시 닫기 (선택사항)
+  // ✅ 배경 클릭 시 닫기
   scheduleInput.addEventListener("click", (e) => {
     if (e.target === scheduleInput) {
       closeScheduleInput();
@@ -212,6 +307,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     renderCalendar(currentMonth, currentYear);
   });
+
   const ai = document.getElementById("ai-btn");
 
   ai.addEventListener("click", () => {
@@ -221,18 +317,31 @@ window.addEventListener("DOMContentLoaded", () => {
   home.addEventListener("click", () => {
     location.href = "main.html";
   });
+
   mypage.addEventListener("click", () => {
     location.href = "mypage.html";
   });
+
   settings.addEventListener("click", () => {
     location.href = "setting.html";
   });
+
   settingsTop.addEventListener("click", () => {
     location.href = "setting.html";
   });
+
   homeTop.addEventListener("click", () => {
     location.href = "main.html";
   });
-  // 초기 렌더링
-  renderCalendar(currentMonth, currentYear);
+  // 삭제 기능
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = e.target.dataset.id;
+      const key = e.target.dataset.key;
+      deleteSchedule(id, key);
+    });
+  });
+
+  // ✅ 초기 데이터 로드
+  await loadSchedules();
 });

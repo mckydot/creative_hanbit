@@ -1,5 +1,16 @@
-// ✅ 디버깅 강화된 로그인 스크립트
+// ✅ Supabase 로그인 스크립트
 (function () {
+  // Supabase 설정
+  const SUPABASE_URL = "https://bawmwecykdaqsjklyjhb.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhd213ZWN5a2RhcXNqa2x5amhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5NjgxNzQsImV4cCI6MjA3NzU0NDE3NH0.KtTxYldOR_VCjUvI5BiAGBENkqHFRmApWM67PdKbGYQ";
+
+  // Supabase 클라이언트 초기화
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
   const email = document.getElementById("email");
   const pass = document.getElementById("password");
   const login = document.getElementById("loginBtn");
@@ -28,123 +39,78 @@
     }
 
     try {
-      console.log("🔐 로그인 시도:", emailVal);
+      console.log("🔐 Supabase 로그인 시도:", emailVal);
 
-      const response = await fetch(
-        "http://192.168.218.193:8080/api/users/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: emailVal, password: pwVal }),
+      // Supabase 로그인
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailVal,
+        password: pwVal,
+      });
+
+      console.log("📥 Supabase 응답:", { data, error });
+
+      // 에러 처리
+      if (error) {
+        console.error("❌ 로그인 실패:", error);
+
+        let errorMsg = "로그인에 실패했습니다.";
+        if (error.message.includes("Invalid login credentials")) {
+          errorMsg = "이메일 또는 비밀번호가 잘못되었습니다.";
+        } else if (error.message.includes("Email not confirmed")) {
+          errorMsg = "이메일 인증이 필요합니다.";
+        } else {
+          errorMsg = error.message;
         }
-      );
 
-      console.log("📥 응답 상태:", response.status, response.statusText);
-
-      // 응답 본문 읽기
-      const text = await response.text();
-      console.log("📥 원본 응답:", text);
-
-      let data = null;
-      if (text) {
-        try {
-          data = JSON.parse(text);
-          console.log("📥 파싱된 데이터:", data);
-        } catch (jsonErr) {
-          console.warn("JSON 파싱 실패:", jsonErr);
-        }
-      }
-
-      // 실패 처리
-      if (!response.ok) {
-        const serverMsg =
-          (data && (data.message || data.msg || data.error)) ||
-          `서버 오류: ${response.status}`;
-        if (result) result.innerText = `❌ 로그인 실패: ${serverMsg}`;
+        if (result) result.innerText = `❌ ${errorMsg}`;
         return;
       }
 
-      // 토큰 추출 - 가능한 모든 경로 확인
-      let token = null;
-      if (data) {
-        // 다양한 응답 구조에 대응
-        token =
-          data.token ||
-          data.accessToken ||
-          data.access_token ||
-          (data.data && (data.data.token || data.data.accessToken)) ||
-          (data.result && data.result.token) ||
-          null;
-      }
+      // 로그인 성공
+      if (data && data.session) {
+        const token = data.session.access_token;
+        const user = data.user;
 
-      console.log(
-        "🔑 추출된 토큰:",
-        token ? `${token.substring(0, 30)}...` : "없음"
-      );
-      console.log("🔑 토큰 전체 길이:", token ? token.length : 0);
+        console.log("✅ 로그인 성공!");
+        console.log("👤 사용자:", user.email);
+        console.log(
+          "🔑 토큰:",
+          token ? `${token.substring(0, 30)}...` : "없음"
+        );
 
-      // 성공 여부 확인
-      const isSuccess =
-        response.ok &&
-        data &&
-        (data.success === 1 ||
-          data.success === "1" ||
-          data.success === true ||
-          data.status === "success" ||
-          data.status === true ||
-          token !== null); // 토큰이 있으면 성공으로 간주
+        try {
+          // 토큰 저장
+          localStorage.removeItem("accessToken");
+          localStorage.setItem("accessToken", token);
 
-      console.log("✅ 로그인 성공 여부:", isSuccess);
+          // 사용자 정보도 저장 (선택사항)
+          localStorage.setItem("userEmail", user.email);
+          localStorage.setItem("userId", user.id);
 
-      if (isSuccess) {
-        if (token) {
-          try {
-            // 토큰 저장 전에 기존 토큰 삭제
-            localStorage.removeItem("accessToken");
+          // 저장 확인
+          const savedToken = localStorage.getItem("accessToken");
+          console.log("💾 토큰 저장 확인:", savedToken ? "성공" : "실패");
 
-            // 새 토큰 저장
-            localStorage.setItem("accessToken", token);
+          if (result)
+            result.innerText = "✅ 로그인 성공! 메인 페이지로 이동합니다.";
 
-            // 저장 확인
-            const savedToken = localStorage.getItem("accessToken");
-            console.log("💾 토큰 저장 확인:", savedToken ? "성공" : "실패");
-            console.log(
-              "💾 저장된 토큰:",
-              savedToken ? `${savedToken.substring(0, 30)}...` : "없음"
-            );
-
-            if (result)
-              result.innerText = "✅ 로그인 성공! 메인 페이지로 이동합니다.";
-
-            // 페이지 이동
-            setTimeout(() => {
-              window.location.href = "main.html";
-            }, 600);
-            return;
-          } catch (lsErr) {
-            console.error("❌ localStorage 저장 오류:", lsErr);
-            if (result) result.innerText = "토큰 저장 실패 (스토리지 오류)";
-            return;
-          }
-        } else {
-          console.warn("⚠️ 로그인 성공했으나 토큰이 없음");
-          console.log("📦 전체 응답 데이터:", JSON.stringify(data, null, 2));
-
-          if (result) {
-            result.innerText =
-              "⚠️ 서버 응답에 토큰이 없습니다. 백엔드를 확인해주세요.";
-          }
+          // 페이지 이동
+          setTimeout(() => {
+            window.location.href = "main.html";
+          }, 600);
+          return;
+        } catch (lsErr) {
+          console.error("❌ localStorage 저장 오류:", lsErr);
+          if (result) result.innerText = "토큰 저장 실패 (스토리지 오류)";
           return;
         }
       } else {
-        const serverMsg =
-          (data && (data.message || data.msg || data.error)) ||
-          "이메일 또는 비밀번호가 잘못되었습니다.";
-        if (result) result.innerText = `❌ 로그인 실패: ${serverMsg}`;
+        console.warn("⚠️ 세션 정보가 없습니다.");
+        if (result) result.innerText = "⚠️ 로그인 정보를 받지 못했습니다.";
         return;
       }
     } catch (error) {
-      console.error("🚨 fetch 예외:", error);
+      console.error("🚨 예외 발생:", error);
       console.error("🚨 에러 스택:", error.stack);
       if (result) {
         result.innerText = "🚨 서버에 연결할 수 없습니다.";
