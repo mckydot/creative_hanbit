@@ -1,23 +1,21 @@
-// ✅ 로그인 화면 스크립트 (API 연동 버전)
+// ✅ 디버깅 강화된 로그인 스크립트
 (function () {
   const email = document.getElementById("email");
   const pass = document.getElementById("password");
   const login = document.getElementById("loginBtn");
   const signup = document.getElementById("signupBtn");
-  const result = document.getElementById("result"); // 로그인 결과 표시용 <p id="result"> 같은 태그 추가해두면 좋아
+  const result = document.getElementById("result");
 
   function validate() {
-    // 이메일/비밀번호가 모두 입력되면 버튼 활성화
-    const ok = email.value.trim() !== "" && pass.value.trim() !== "";
-    login.disabled = !ok;
+    const ok =
+      email && pass && email.value.trim() !== "" && pass.value.trim() !== "";
+    if (login) login.disabled = !ok;
   }
 
-  // 초기 상태
   validate();
-  email.addEventListener("input", validate);
-  pass.addEventListener("input", validate);
+  if (email) email.addEventListener("input", validate);
+  if (pass) pass.addEventListener("input", validate);
 
-  // ✅ 로그인 버튼 클릭 시 서버 요청
   login.addEventListener("click", async function (e) {
     e.preventDefault();
 
@@ -25,68 +23,148 @@
     const pwVal = pass.value.trim();
 
     if (!emailVal || !pwVal) {
-      result.innerText = "이메일과 비밀번호를 입력해주세요.";
+      if (result) result.innerText = "이메일과 비밀번호를 입력해주세요.";
       return;
     }
 
     try {
+      console.log("🔐 로그인 시도:", emailVal);
+
       const response = await fetch(
         "http://192.168.218.193:8080/api/users/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: emailVal,
-            password: pwVal,
-          }),
+          body: JSON.stringify({ email: emailVal, password: pwVal }),
         }
       );
 
-      // ⚙️ 응답이 JSON인지 확인
+      console.log("📥 응답 상태:", response.status, response.statusText);
+
+      // 응답 본문 읽기
       const text = await response.text();
+      console.log("📥 원본 응답:", text);
+
       let data = null;
-      try {
-        data = text ? JSON.parse(text) : null;
-      } catch (err) {
-        console.error("⚠️ 서버 응답이 JSON이 아닙니다:", err);
+      if (text) {
+        try {
+          data = JSON.parse(text);
+          console.log("📥 파싱된 데이터:", data);
+        } catch (jsonErr) {
+          console.warn("JSON 파싱 실패:", jsonErr);
+        }
       }
 
+      // 실패 처리
       if (!response.ok) {
-        // 로그인 실패 (HTTP 상태 400, 401 등)
-        result.innerText =
-          (data && data.message) || "❌ 로그인 실패: 서버 오류 발생";
+        const serverMsg =
+          (data && (data.message || data.msg || data.error)) ||
+          `서버 오류: ${response.status}`;
+        if (result) result.innerText = `❌ 로그인 실패: ${serverMsg}`;
         return;
       }
 
-      // ✅ 로그인 성공 → 토큰 저장
-      if (data && data.accessToken) {
-        // accessToken을 localStorage에 저장
-        localStorage.setItem("accessToken", data.accessToken);
+      // 토큰 추출 - 가능한 모든 경로 확인
+      let token = null;
+      if (data) {
+        // 다양한 응답 구조에 대응
+        token =
+          data.token ||
+          data.accessToken ||
+          data.access_token ||
+          (data.data && (data.data.token || data.data.accessToken)) ||
+          (data.result && data.result.token) ||
+          null;
+      }
 
-        result.innerText = "✅ 로그인 성공! 메인 페이지로 이동합니다.";
-        setTimeout(() => (location.href = "main.html"), 1000);
+      console.log(
+        "🔑 추출된 토큰:",
+        token ? `${token.substring(0, 30)}...` : "없음"
+      );
+      console.log("🔑 토큰 전체 길이:", token ? token.length : 0);
+
+      // 성공 여부 확인
+      const isSuccess =
+        response.ok &&
+        data &&
+        (data.success === 1 ||
+          data.success === "1" ||
+          data.success === true ||
+          data.status === "success" ||
+          data.status === true ||
+          token !== null); // 토큰이 있으면 성공으로 간주
+
+      console.log("✅ 로그인 성공 여부:", isSuccess);
+
+      if (isSuccess) {
+        if (token) {
+          try {
+            // 토큰 저장 전에 기존 토큰 삭제
+            localStorage.removeItem("accessToken");
+
+            // 새 토큰 저장
+            localStorage.setItem("accessToken", token);
+
+            // 저장 확인
+            const savedToken = localStorage.getItem("accessToken");
+            console.log("💾 토큰 저장 확인:", savedToken ? "성공" : "실패");
+            console.log(
+              "💾 저장된 토큰:",
+              savedToken ? `${savedToken.substring(0, 30)}...` : "없음"
+            );
+
+            if (result)
+              result.innerText = "✅ 로그인 성공! 메인 페이지로 이동합니다.";
+
+            // 페이지 이동
+            setTimeout(() => {
+              window.location.href = "main.html";
+            }, 600);
+            return;
+          } catch (lsErr) {
+            console.error("❌ localStorage 저장 오류:", lsErr);
+            if (result) result.innerText = "토큰 저장 실패 (스토리지 오류)";
+            return;
+          }
+        } else {
+          console.warn("⚠️ 로그인 성공했으나 토큰이 없음");
+          console.log("📦 전체 응답 데이터:", JSON.stringify(data, null, 2));
+
+          if (result) {
+            result.innerText =
+              "⚠️ 서버 응답에 토큰이 없습니다. 백엔드를 확인해주세요.";
+          }
+          return;
+        }
       } else {
-        result.innerText =
-          (data && data.message) ||
-          "❌ 이메일 또는 비밀번호가 올바르지 않습니다.";
+        const serverMsg =
+          (data && (data.message || data.msg || data.error)) ||
+          "이메일 또는 비밀번호가 잘못되었습니다.";
+        if (result) result.innerText = `❌ 로그인 실패: ${serverMsg}`;
+        return;
       }
     } catch (error) {
-      console.error("🚨 서버 통신 오류:", error);
-      result.innerText =
-        "🚨 서버에 연결할 수 없습니다. (백엔드가 실행 중인가요?)";
+      console.error("🚨 fetch 예외:", error);
+      console.error("🚨 에러 스택:", error.stack);
+      if (result) {
+        result.innerText = "🚨 서버에 연결할 수 없습니다.";
+      }
     }
   });
 
   // 회원가입 버튼
-  signup.addEventListener("click", function (e) {
-    e.preventDefault();
-    location.href = "register.html";
-  });
+  if (signup) {
+    signup.addEventListener("click", function (e) {
+      e.preventDefault();
+      location.href = "register.html";
+    });
+  }
 
   // 엔터키로 로그인
-  [email, pass].forEach((el) =>
-    el.addEventListener("keydown", (ev) => {
-      if (ev.key === "Enter" && !login.disabled) login.click();
-    })
-  );
+  [email, pass].forEach((el) => {
+    if (el)
+      el.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" && !login.disabled) login.click();
+      });
+  });
 })();
