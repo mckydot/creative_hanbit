@@ -1,4 +1,6 @@
-// ✅ Supabase 메인 페이지 스크립트
+// ✅ 청년센터 API 설정
+const YOUTH_API_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
+const YOUTH_API_KEY = "fa19e38e-58a0-4847-b18a-a8e272bd8f40";
 
 // Supabase 설정
 const SUPABASE_URL = "https://bawmwecykdaqsjklyjhb.supabase.co";
@@ -7,6 +9,183 @@ const SUPABASE_ANON_KEY =
 
 // Supabase 클라이언트 초기화
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== 청년센터 API에서 공지사항 가져오기 =====
+async function fetchPolicies(count = 10) {
+  try {
+    console.log("📋 청년센터 API에서 정책 정보 가져오는 중...");
+
+    // 청년센터 API 파라미터 (공식 문서 기준)
+    const params = new URLSearchParams({
+      openApiVlak: YOUTH_API_KEY,
+      display: count.toString(),
+      pageIndex: "1",
+    });
+
+    const targetUrl = `${YOUTH_API_URL}?${params.toString()}`;
+
+    console.log("🔗 요청 URL:", targetUrl);
+
+    // allorigins 프록시 사용
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
+      targetUrl
+    )}`;
+
+    const response = await fetch(proxyUrl);
+
+    if (!response.ok) {
+      throw new Error(`프록시 요청 실패: ${response.status}`);
+    }
+
+    const proxyData = await response.json();
+
+    // HTML이 반환되는 경우 처리
+    if (
+      proxyData.contents.startsWith("<!DOCTYPE") ||
+      proxyData.contents.startsWith("<html")
+    ) {
+      console.error("❌ HTML 응답 받음");
+      throw new Error("API가 HTML을 반환했습니다. API 키를 확인해주세요.");
+    }
+
+    const data = JSON.parse(proxyData.contents);
+    console.log("📋 파싱된 데이터:", data);
+
+    // 청년센터 API 응답 구조: { youthPolicy: [...] }
+    if (data && data.youthPolicy && Array.isArray(data.youthPolicy)) {
+      console.log(`✅ ${data.youthPolicy.length}개의 정책 정보 로드 성공`);
+      return data.youthPolicy;
+    } else if (data && data.empl && Array.isArray(data.empl)) {
+      console.log(`✅ ${data.empl.length}개의 정책 정보 로드 성공`);
+      return data.empl;
+    } else {
+      console.error("❌ 정책 데이터를 찾을 수 없음. 응답:", data);
+      throw new Error("정책 데이터를 찾을 수 없습니다.");
+    }
+  } catch (error) {
+    console.error("❌ API 호출 실패:", error);
+    throw error;
+  }
+}
+
+// ===== 공지사항 카드 렌더링 =====
+function renderPolicyCards(policies) {
+  const jobList = document.querySelector(".job-list");
+  if (!jobList) return;
+
+  // 기존 카드 제거
+  jobList.innerHTML = "";
+
+  if (policies.length === 0) {
+    jobList.innerHTML =
+      '<p style="text-align:center; padding:40px; color:#999;">표시할 공지사항이 없습니다.</p>';
+    return;
+  }
+
+  policies.forEach((policy) => {
+    const card = document.createElement("article");
+    card.className = "job-card";
+    card.dataset.policyNo = policy.plcyNo;
+
+    // 카테고리 태그 생성
+    const categories = [];
+    if (policy.lclsfNm) categories.push(policy.lclsfNm);
+    if (policy.mclsfNm) categories.push(policy.mclsfNm);
+    if (policy.plcyKywdNm) categories.push(policy.plcyKywdNm);
+
+    const tagsHtml = categories
+      .slice(0, 4)
+      .map((cat) => `<span class="tag">${cat}</span>`)
+      .join("");
+
+    // 나이 제한 표시
+    let ageRange = "";
+    if (policy.sprtTrgtMinAge || policy.sprtTrgtMaxAge) {
+      const minAge = policy.sprtTrgtMinAge || "제한없음";
+      const maxAge = policy.sprtTrgtMaxAge || "제한없음";
+      ageRange = `만 ${minAge}세 ~ 만 ${maxAge}세`;
+    }
+
+    // 기간 표시
+    let period = "상시";
+    if (policy.bizPrdBgngYmd && policy.bizPrdEndYmd) {
+      const start = policy.bizPrdBgngYmd.replace(
+        /(\d{4})(\d{2})(\d{2})/,
+        "$1.$2.$3"
+      );
+      const end = policy.bizPrdEndYmd.replace(
+        /(\d{4})(\d{2})(\d{2})/,
+        "$1.$2.$3"
+      );
+      period = `${start} ~ ${end}`;
+    } else if (policy.bizPrdEtcCn) {
+      period = policy.bizPrdEtcCn;
+    }
+
+    card.innerHTML = `
+      <button class="bookmark-btn" aria-label="즐겨찾기">
+        <i data-lucide="bookmark"></i>
+      </button>
+      <h3 class="job-title">${policy.plcyNm}</h3>
+      <div class="job-tags">${tagsHtml}</div>
+      <div class="job-info">
+        ${ageRange ? `<p><i data-lucide="user"></i> ${ageRange}</p>` : ""}
+        <p><i data-lucide="clock"></i> ${period}</p>
+        ${
+          policy.sprvsnInstCdNm
+            ? `<p><i data-lucide="building"></i> ${policy.sprvsnInstCdNm}</p>`
+            : ""
+        }
+      </div>
+      <p class="job-pay">${
+        policy.plcyExplnCn?.substring(0, 100) || "상세 내용 확인 필요"
+      }${policy.plcyExplnCn?.length > 100 ? "..." : ""}</p>
+    `;
+
+    // 카드 클릭 시 상세 페이지로 이동
+    card.addEventListener("click", (e) => {
+      if (!e.target.closest(".bookmark-btn")) {
+        window.open(policy.aplyUrlAddr || policy.refUrlAddr1, "_blank");
+      }
+    });
+
+    // 카테고리 데이터 저장
+    card.dataset.categories = categories.join(",");
+
+    jobList.appendChild(card);
+  });
+
+  // 아이콘 다시 생성
+  lucide.createIcons();
+
+  // 북마크 기능 다시 바인딩
+  bindBookmarkButtons();
+}
+
+// ===== 북마크 기능 바인딩 =====
+function bindBookmarkButtons() {
+  const bookmarkButtons = document.querySelectorAll(".bookmark-btn");
+  bookmarkButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      btn.classList.toggle("active");
+
+      const svg = btn.querySelector("svg");
+      if (btn.classList.contains("active")) {
+        svg.innerHTML =
+          '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="currentColor"></path>';
+      } else {
+        svg.innerHTML =
+          '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>';
+      }
+
+      btn.animate([{ transform: "scale(1.3)" }, { transform: "scale(1)" }], {
+        duration: 250,
+        easing: "ease-out",
+      });
+    });
+  });
+}
 
 // DOM 로드 완료 후 실행
 document.addEventListener("DOMContentLoaded", async () => {
@@ -52,6 +231,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userKeywords = userData?.keywords || [];
   console.log("🔖 사용자 키워드:", userKeywords);
 
+  // ===== 공지사항 로드 (기본 10개) =====
+  try {
+    console.log("📋 공지사항 로딩 중... (10개)");
+    const policies = await fetchPolicies(10);
+    console.log(`✅ ${policies.length}개의 공지사항 로드 완료`);
+
+    // 공지사항 카드 렌더링
+    renderPolicyCards(policies);
+  } catch (error) {
+    console.error("❌ 정책 정보 로드 실패:", error);
+    const jobList = document.querySelector(".job-list");
+    if (jobList) {
+      jobList.innerHTML = `
+        <div style="text-align:center; padding:40px; color:#e74c3c;">
+          <p style="font-size:18px; margin-bottom:10px;">⚠️ 정책 정보를 불러올 수 없습니다.</p>
+          <p style="font-size:14px; color:#999;">${error.message}</p>
+          <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px; cursor:pointer;">
+            새로고침
+          </button>
+        </div>
+      `;
+    }
+    return;
+  }
+
   // ===== 카테고리 버튼 동적 생성 =====
   const categoryScroll = document.querySelector(".category-scroll");
 
@@ -84,74 +288,84 @@ document.addEventListener("DOMContentLoaded", async () => {
   const settings = document.getElementById("settings-btn2");
   const ai = document.getElementById("ai-btn");
 
-  ai?.addEventListener("click", () => (location.href = "ai.html"));
-  mypage?.addEventListener("click", () => (location.href = "mypage.html"));
-  settings?.addEventListener("click", () => (location.href = "setting.html"));
-  mypageBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "mypage.html";
-  });
-  calendarBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "calendar.html";
-  });
-  settingsBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    location.href = "setting.html";
-  });
-
-  // ===== 북마크 버튼 클릭 기능 =====
-  const bookmarkButtons = document.querySelectorAll(".bookmark-btn");
-  bookmarkButtons.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      btn.classList.toggle("active");
-
-      const svg = btn.querySelector("svg");
-      if (btn.classList.contains("active")) {
-        svg.innerHTML =
-          '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" fill="currentColor"></path>';
-      } else {
-        svg.innerHTML =
-          '<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>';
-      }
-
-      btn.animate([{ transform: "scale(1.3)" }, { transform: "scale(1)" }], {
-        duration: 250,
-        easing: "ease-out",
-      });
+  if (ai) ai.addEventListener("click", () => (location.href = "ai.html"));
+  if (mypage)
+    mypage.addEventListener("click", () => (location.href = "mypage.html"));
+  if (settings)
+    settings.addEventListener("click", () => (location.href = "setting.html"));
+  if (mypageBtn) {
+    mypageBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href = "mypage.html";
     });
-  });
+  }
+  if (calendarBtn) {
+    calendarBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href = "calendar.html";
+    });
+  }
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href = "setting.html";
+    });
+  }
 
-  // ===== 카테고리 필터링 기능 =====
-  const jobCards = document.querySelectorAll(".job-card");
+  // ===== 검색 기능 =====
+  const searchInput = document.getElementById("searchInput");
 
-  jobCards.forEach((card) => {
-    const tags = Array.from(card.querySelectorAll(".tag")).map((t) =>
-      t.textContent.trim()
-    );
-    card.dataset.categories = tags.join(",");
-  });
-
-  // 동적으로 생성된 버튼에 이벤트 리스너 추가
-  categoryScroll?.addEventListener("click", (e) => {
-    if (e.target.classList.contains("category-btn")) {
-      const categoryButtons = document.querySelectorAll(".category-btn");
-      categoryButtons.forEach((b) => b.classList.remove("active"));
-      e.target.classList.add("active");
-
-      const selected = e.target.textContent.trim();
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const searchTerm = e.target.value.trim().toLowerCase();
+      const jobCards = document.querySelectorAll(".job-card");
 
       jobCards.forEach((card) => {
-        if (selected === "전체") {
-          card.style.display = "block";
-        } else {
-          const categories = card.dataset.categories.split(",");
-          card.style.display = categories.includes(selected) ? "block" : "none";
-        }
+        const title =
+          card.querySelector(".job-title")?.textContent.toLowerCase() || "";
+        const tags = card.dataset.categories?.toLowerCase() || "";
+        const description =
+          card.querySelector(".job-pay")?.textContent.toLowerCase() || "";
+
+        const matches =
+          title.includes(searchTerm) ||
+          tags.includes(searchTerm) ||
+          description.includes(searchTerm);
+
+        card.style.display = matches ? "block" : "none";
       });
-    }
-  });
+    });
+  }
+
+  // ===== 카테고리 필터링 기능 (키워드 중 하나라도 일치하면 표시) =====
+  if (categoryScroll) {
+    categoryScroll.addEventListener("click", (e) => {
+      if (e.target.classList.contains("category-btn")) {
+        const categoryButtons = document.querySelectorAll(".category-btn");
+        categoryButtons.forEach((b) => b.classList.remove("active"));
+        e.target.classList.add("active");
+
+        const selected = e.target.textContent.trim();
+        const jobCards = document.querySelectorAll(".job-card");
+
+        jobCards.forEach((card) => {
+          if (selected === "전체") {
+            card.style.display = "block";
+          } else {
+            // 카드의 모든 카테고리 가져오기
+            const categories = card.dataset.categories?.split(",") || [];
+            // 선택한 키워드가 카테고리 중 하나라도 포함되어 있으면 표시
+            const matches = categories.some(
+              (cat) =>
+                cat.toLowerCase().includes(selected.toLowerCase()) ||
+                selected.toLowerCase().includes(cat.toLowerCase())
+            );
+            card.style.display = matches ? "block" : "none";
+          }
+        });
+      }
+    });
+  }
 });
 
 // =============================
@@ -163,35 +377,30 @@ const fabOverlay = document.getElementById("fabOverlay");
 const matchingBtn = document.getElementById("matchingBtn");
 const historyBtn = document.getElementById("historyBtn");
 
-fabBtn?.addEventListener("click", () => {
-  fabBtn.classList.toggle("active");
-  fabMenu.classList.toggle("active");
-  fabOverlay.classList.toggle("active");
-});
+if (fabBtn && fabMenu && fabOverlay) {
+  fabBtn.addEventListener("click", () => {
+    fabBtn.classList.toggle("active");
+    fabMenu.classList.toggle("active");
+    fabOverlay.classList.toggle("active");
+  });
 
-fabOverlay?.addEventListener("click", () => {
-  fabBtn.classList.remove("active");
-  fabMenu.classList.remove("active");
-  fabOverlay.classList.remove("active");
-});
+  fabOverlay.addEventListener("click", () => {
+    fabBtn.classList.remove("active");
+    fabMenu.classList.remove("active");
+    fabOverlay.classList.remove("active");
+  });
+}
 
-document.addEventListener("click", (e) => {
-  if (
-    !e.target.closest(".fab-container") &&
-    !e.target.closest(".fab-overlay")
-  ) {
-    fabBtn?.classList.remove("active");
-    fabMenu?.classList.remove("active");
-    fabOverlay?.classList.remove("active");
-  }
-});
+if (matchingBtn) {
+  matchingBtn.addEventListener("click", () => {
+    alert("직원 매칭 시스템 페이지로 이동합니다.");
+    location.href = "matching.html";
+  });
+}
 
-matchingBtn?.addEventListener("click", () => {
-  alert("직원 매칭 시스템 페이지로 이동합니다.");
-  location.href = "matching.html";
-});
-
-historyBtn?.addEventListener("click", () => {
-  alert("작년 공지 확인 페이지로 이동합니다.");
-  // location.href = 'history.html';
-});
+if (historyBtn) {
+  historyBtn.addEventListener("click", () => {
+    alert("작년 공지 확인 페이지로 이동합니다.");
+    // location.href = 'history.html';
+  });
+}
