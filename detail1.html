@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>한빛모아 || 공고 상세</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background: #ffffff;
+      font-family: 'Juache', "Noto Sans KR", sans-serif;
+      color: #333;
+    }
+
+    /* 상단 제목 */
+    .detail-header {
+      margin-top: 58px;
+      /* 네브바 높이만큼 띄움 */
+      padding: 20px;
+      background: #f7faff;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.4;
+    }
+
+    .detail-header .tags {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .detail-header .tag {
+      background: #eef6ff;
+      color: var(--sky2);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 10px;
+    }
+
+    /* 본문 내용 */
+    .detail-content {
+      padding: 24px 20px 100px;
+      line-height: 1.7;
+    }
+
+    .detail-content h3 {
+      font-size: 16px;
+      color: var(--sky2);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .detail-content p {
+      font-size: 15px;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .info-box {
+      background: #f9fcff;
+      border: 1px solid #d8ecff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .info-item i {
+      width: 16px;
+      height: 16px;
+      color: var(--sky2);
+      margin-right: 6px;
+    }
+
+    /* 버튼 */
+    .btn-area {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .apply-btn {
+      display: inline-block;
+      background: var(--sky2);
+      color: #fff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .apply-btn:hover {
+      background: #0e91d6;
+      transform: translateY(-1px);
+    }
+
+    /* 뒤로가기 버튼 (상단 왼쪽) */
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 14px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      z-index: 1001;
+    }
+
+    .back-btn i {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* 하단 내브바 여백 확보 */
+    main {
+      margin-bottom: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ 상단 네브바 -->
+  <header class="navbar">
+    <button class="back-btn" id="backBtn" aria-label="뒤로가기">
+      <i data-lucide="arrow-left"></i>
+    </button>
+    <h1 class="app-name">한빛모아</h1>
+    <div style="width:40px;"></div> <!-- 균형 맞추기용 -->
+  </header>
+
+  <!-- ✅ 상세 헤더 -->
+  <section class="detail-header">
+    <h2>청년, 슬기로운 도서관 생활</h2>
+    <div class="tags">
+      <span class="tag">청년</span>
+      <span class="tag">취업</span>
+      <span class="tag">복지</span>
+      <span class="tag">모임 장소</span>
+    </div>
+  </section>
+
+  <!-- ✅ 상세 내용 -->
+  <main class="detail-content">
+    <div class="info-box">
+      <div class="info-item">
+        <i data-lucide="map-pin"></i>
+        <span>경상남도</span>
+      </div>
+      <div class="info-item">
+        <i data-lucide="clock"></i>
+        <span>2025.01.01~2025.12.31</span>
+      </div>
+    </div>
+
+    <h3>프로그램 개요</h3>
+    <p>청년의 역량 강화와 소통 교류의 장을 위한 스터디, 토론, 취업 준비 활동장소 제공</p>
+
+    <h3>지원 대상</h3>
+    <p>만 19세~만 39세<br>
+      경상남도 창원시 의창구, 경상남도 창원시 성산구, 경상남도 창원시 마산합포구, 경상남도 창원시 마산회원구, 경상남도 창원시 진해구</p>
+
+    <h3>지원 내용</h3>
+    <p>창원, 취업 관련 자료 코너 운영 및 청년 맞춤 추천도서목록 제공<br>
+      청년 원데이 클래스 운영<br>
+      그룹스터디, 토론, 취업 준비를 위한 창원 청년들에게 모임 장소 제공<br>
+      노트북, 빔프로젝터, 스크린 등 기기 및 영상 편집 프로그램 지원</p>
+
+    <h3>신청 방법</h3>
+    <p><a href="https://lib.changwon.go.kr/ss/index_real.php" target="_blank">https://lib.changwon.go.kr/ss/index_real.php</a></p>
+
+    <div class="btn-area">
+      <button id="enjoy" class="apply-btn">참여 신청하기</button>
+    </div>
+  </main>
+
+  <!-- ✅ 하단 내브바 -->
+    <nav class="bottom-nav">
+        <button class="bottom-btn" id="ai-btn" aria-label="AI 기능">
+            <i data-lucide="bot"></i>
+            <span>AI</span>
+        </button>
+
+        <button class="bottom-btn" id="calendar-btn" aria-label="달력">
+            <i data-lucide="calendar"></i>
+            <span>달력</span>
+        </button>
+
+        <button class="bottom-btn home-btn" id="home-btn" aria-label="홈">
+            <div class="home-icon">
+                <i data-lucide="home"></i>
+            </div>
+        </button>
+
+        <button class="bottom-btn" id="mypage-btn2" aria-label="마이페이지">
+            <i data-lucide="user"></i>
+            <span>마이</span>
+        </button>
+
+        <button class="bottom-btn" id="settings-btn2" aria-label="설정">
+            <i data-lucide="settings"></i>
+            <span>설정</span>
+        </button>
+    </nav>
+
+  <!-- ✅ JavaScript -->
+  <script>
+    lucide.createIcons();
+
+    // 참여 신청 버튼
+    document.getElementById("enjoy").addEventListener("click", () => {
+      window.location.href = "https://www.youthcenter.go.kr/youthPolicy/ythPlcyTotalSearch/ythPlcyDetail/20250922005400211785?isNew=Y";
+    });
+
+    // 네브바 버튼 이동 기능
+    document.getElementById("backBtn").addEventListener("click", () => {
+      history.back();
+    });
+    document.getElementById("mypageBtn").addEventListener("click", () => {
+      window.location.href = "mypage.html";
+    });
+    document.getElementById("homeBtn").addEventListener("click", () => {
+      window.location.href = "main.html";
+    });
+    document.getElementById("settingBtn").addEventListener("click", () => {
+      window.location.href = "setting.html";
+    });
+  </script>
+</body>
+</html>

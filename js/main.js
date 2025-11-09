@@ -6,161 +6,219 @@ const YOUTH_API_KEY = "fa19e38e-58a0-4847-b18a-a8e272bd8f40";
 const SUPABASE_URL = "https://bawmwecykdaqsjklyjhb.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhd213ZWN5a2RhcXNqa2x5amhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5NjgxNzQsImV4cCI6MjA3NzU0NDE3NH0.KtTxYldOR_VCjUvI5BiAGBENkqHFRmApWM67PdKbGYQ";
+const detail1 = document.getElementById("detail1");
+const detail2 = document.getElementById("detail2");
+const detail3 = document.getElementById("detail3");
+detail1.addEventListener("click", () => {
+  location.href = "detail1.html";
+});
 
+detail2.addEventListener("click", () => {
+  location.href = "detail2.html";
+});
+detail3.addEventListener("click", () => {
+  location.href = "detail3.html";
+});
 // Supabase 클라이언트 초기화
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== 청년센터 API에서 공지사항 가져오기 =====
-async function fetchPolicies(count = 10) {
-  try {
-    console.log("📋 청년센터 API에서 정책 정보 가져오는 중...");
+// ===== 청년센터 API에서 공지사항 가져오기 (주석처리) =====
+// async function fetchPolicies(count = 10, retryCount = 0) {
+//   const MAX_RETRIES = 2;
+//
+//   try {
+//     console.log(
+//       `📋 청년센터 API에서 정책 정보 가져오는 중... (시도 ${retryCount + 1}/${
+//         MAX_RETRIES + 1
+//       })`
+//     );
+//
+//     const params = new URLSearchParams({
+//       openApiVlak: YOUTH_API_KEY,
+//       display: count.toString(),
+//       pageIndex: "1",
+//     });
+//
+//     const targetUrl = `${YOUTH_API_URL}?${params.toString()}`;
+//     console.log("🔗 요청 URL:", targetUrl);
+//
+//     const proxyUrl = `https://cors-anywhere.herokuapp.com/${targetUrl}`;
+//
+//     const response = await fetch(proxyUrl, {
+//       headers: {
+//         "X-Requested-With": "XMLHttpRequest",
+//       },
+//     });
+//
+//     if (!response.ok) {
+//       if (response.status === 408 && retryCount < MAX_RETRIES) {
+//         console.log("⏱️ 타임아웃, 재시도 중...");
+//         await new Promise((resolve) => setTimeout(resolve, 1000));
+//         return fetchPolicies(count, retryCount + 1);
+//       }
+//       throw new Error(`프록시 요청 실패: ${response.status}`);
+//     }
+//
+//     const data = await response.json();
+//     console.log("📋 파싱된 데이터:", data);
+//
+//     if (data && data.youthPolicy && Array.isArray(data.youthPolicy)) {
+//       console.log(`✅ ${data.youthPolicy.length}개의 정책 정보 로드 성공`);
+//       return data.youthPolicy;
+//     } else if (data && data.empl && Array.isArray(data.empl)) {
+//       console.log(`✅ ${data.empl.length}개의 정책 정보 로드 성공`);
+//       return data.empl;
+//     } else {
+//       console.error("❌ 정책 데이터를 찾을 수 없음. 응답:", data);
+//       throw new Error("정책 데이터를 찾을 수 없습니다.");
+//     }
+//   } catch (error) {
+//     if (
+//       retryCount === 0 &&
+//       (error.message.includes("Failed to fetch") ||
+//         error.message.includes("408"))
+//     ) {
+//       console.log("🔄 다른 프록시로 재시도...");
+//       return fetchPoliciesWithAllOrigins(count);
+//     }
+//
+//     console.error("❌ API 호출 실패:", error);
+//     throw error;
+//   }
+// }
+//
+// async function fetchPoliciesWithAllOrigins(count = 10) {
+//   try {
+//     console.log("📋 AllOrigins 프록시로 시도 중...");
+//
+//     const params = new URLSearchParams({
+//       openApiVlak: YOUTH_API_KEY,
+//       display: count.toString(),
+//       pageIndex: "1",
+//     });
+//
+//     const targetUrl = `${YOUTH_API_URL}?${params.toString()}`;
+//     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
+//       targetUrl
+//     )}`;
+//
+//     const response = await fetch(proxyUrl);
+//
+//     if (!response.ok) {
+//       throw new Error(`AllOrigins 요청 실패: ${response.status}`);
+//     }
+//
+//     const proxyData = await response.json();
+//
+//     if (
+//       proxyData.contents.startsWith("<!DOCTYPE") ||
+//       proxyData.contents.startsWith("<html")
+//     ) {
+//       throw new Error("API가 HTML을 반환했습니다. API 키를 확인해주세요.");
+//     }
+//
+//     const data = JSON.parse(proxyData.contents);
+//     console.log("📋 파싱된 데이터:", data);
+//
+//     if (data && data.youthPolicy && Array.isArray(data.youthPolicy)) {
+//       console.log(`✅ ${data.youthPolicy.length}개의 정책 정보 로드 성공`);
+//       return data.youthPolicy;
+//     } else if (data && data.empl && Array.isArray(data.empl)) {
+//       console.log(`✅ ${data.empl.length}개의 정책 정보 로드 성공`);
+//       return data.empl;
+//     } else {
+//       throw new Error("정책 데이터를 찾을 수 없습니다.");
+//     }
+//   } catch (error) {
+//     console.error("❌ AllOrigins 프록시 실패:", error);
+//     throw error;
+//   }
+// }
 
-    // 청년센터 API 파라미터 (공식 문서 기준)
-    const params = new URLSearchParams({
-      openApiVlak: YOUTH_API_KEY,
-      display: count.toString(),
-      pageIndex: "1",
-    });
-
-    const targetUrl = `${YOUTH_API_URL}?${params.toString()}`;
-
-    console.log("🔗 요청 URL:", targetUrl);
-
-    // allorigins 프록시 사용
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(
-      targetUrl
-    )}`;
-
-    const response = await fetch(proxyUrl);
-
-    if (!response.ok) {
-      throw new Error(`프록시 요청 실패: ${response.status}`);
-    }
-
-    const proxyData = await response.json();
-
-    // HTML이 반환되는 경우 처리
-    if (
-      proxyData.contents.startsWith("<!DOCTYPE") ||
-      proxyData.contents.startsWith("<html")
-    ) {
-      console.error("❌ HTML 응답 받음");
-      throw new Error("API가 HTML을 반환했습니다. API 키를 확인해주세요.");
-    }
-
-    const data = JSON.parse(proxyData.contents);
-    console.log("📋 파싱된 데이터:", data);
-
-    // 청년센터 API 응답 구조: { youthPolicy: [...] }
-    if (data && data.youthPolicy && Array.isArray(data.youthPolicy)) {
-      console.log(`✅ ${data.youthPolicy.length}개의 정책 정보 로드 성공`);
-      return data.youthPolicy;
-    } else if (data && data.empl && Array.isArray(data.empl)) {
-      console.log(`✅ ${data.empl.length}개의 정책 정보 로드 성공`);
-      return data.empl;
-    } else {
-      console.error("❌ 정책 데이터를 찾을 수 없음. 응답:", data);
-      throw new Error("정책 데이터를 찾을 수 없습니다.");
-    }
-  } catch (error) {
-    console.error("❌ API 호출 실패:", error);
-    throw error;
-  }
-}
-
-// ===== 공지사항 카드 렌더링 =====
-function renderPolicyCards(policies) {
-  const jobList = document.querySelector(".job-list");
-  if (!jobList) return;
-
-  // 기존 카드 제거
-  jobList.innerHTML = "";
-
-  if (policies.length === 0) {
-    jobList.innerHTML =
-      '<p style="text-align:center; padding:40px; color:#999;">표시할 공지사항이 없습니다.</p>';
-    return;
-  }
-
-  policies.forEach((policy) => {
-    const card = document.createElement("article");
-    card.className = "job-card";
-    card.dataset.policyNo = policy.plcyNo;
-
-    // 카테고리 태그 생성
-    const categories = [];
-    if (policy.lclsfNm) categories.push(policy.lclsfNm);
-    if (policy.mclsfNm) categories.push(policy.mclsfNm);
-    if (policy.plcyKywdNm) categories.push(policy.plcyKywdNm);
-
-    const tagsHtml = categories
-      .slice(0, 4)
-      .map((cat) => `<span class="tag">${cat}</span>`)
-      .join("");
-
-    // 나이 제한 표시
-    let ageRange = "";
-    if (policy.sprtTrgtMinAge || policy.sprtTrgtMaxAge) {
-      const minAge = policy.sprtTrgtMinAge || "제한없음";
-      const maxAge = policy.sprtTrgtMaxAge || "제한없음";
-      ageRange = `만 ${minAge}세 ~ 만 ${maxAge}세`;
-    }
-
-    // 기간 표시
-    let period = "상시";
-    if (policy.bizPrdBgngYmd && policy.bizPrdEndYmd) {
-      const start = policy.bizPrdBgngYmd.replace(
-        /(\d{4})(\d{2})(\d{2})/,
-        "$1.$2.$3"
-      );
-      const end = policy.bizPrdEndYmd.replace(
-        /(\d{4})(\d{2})(\d{2})/,
-        "$1.$2.$3"
-      );
-      period = `${start} ~ ${end}`;
-    } else if (policy.bizPrdEtcCn) {
-      period = policy.bizPrdEtcCn;
-    }
-
-    card.innerHTML = `
-      <button class="bookmark-btn" aria-label="즐겨찾기">
-        <i data-lucide="bookmark"></i>
-      </button>
-      <h3 class="job-title">${policy.plcyNm}</h3>
-      <div class="job-tags">${tagsHtml}</div>
-      <div class="job-info">
-        ${ageRange ? `<p><i data-lucide="user"></i> ${ageRange}</p>` : ""}
-        <p><i data-lucide="clock"></i> ${period}</p>
-        ${
-          policy.sprvsnInstCdNm
-            ? `<p><i data-lucide="building"></i> ${policy.sprvsnInstCdNm}</p>`
-            : ""
-        }
-      </div>
-      <p class="job-pay">${
-        policy.plcyExplnCn?.substring(0, 100) || "상세 내용 확인 필요"
-      }${policy.plcyExplnCn?.length > 100 ? "..." : ""}</p>
-    `;
-
-    // 카드 클릭 시 상세 페이지로 이동
-    card.addEventListener("click", (e) => {
-      if (!e.target.closest(".bookmark-btn")) {
-        window.open(policy.aplyUrlAddr || policy.refUrlAddr1, "_blank");
-      }
-    });
-
-    // 카테고리 데이터 저장
-    card.dataset.categories = categories.join(",");
-
-    jobList.appendChild(card);
-  });
-
-  // 아이콘 다시 생성
-  lucide.createIcons();
-
-  // 북마크 기능 다시 바인딩
-  bindBookmarkButtons();
-}
+// ===== 공지사항 카드 렌더링 (주석처리) =====
+// function renderPolicyCards(policies) {
+//   const jobList = document.querySelector(".job-list");
+//   if (!jobList) return;
+//
+//   jobList.innerHTML = "";
+//
+//   if (policies.length === 0) {
+//     jobList.innerHTML =
+//       '<p style="text-align:center; padding:40px; color:#999;">표시할 공지사항이 없습니다.</p>';
+//     return;
+//   }
+//
+//   policies.forEach((policy) => {
+//     const card = document.createElement("article");
+//     card.className = "job-card";
+//     card.dataset.policyNo = policy.plcyNo;
+//
+//     const categories = [];
+//     if (policy.lclsfNm) categories.push(policy.lclsfNm);
+//     if (policy.mclsfNm) categories.push(policy.mclsfNm);
+//     if (policy.plcyKywdNm) categories.push(policy.plcyKywdNm);
+//
+//     const tagsHtml = categories
+//       .slice(0, 4)
+//       .map((cat) => `<span class="tag">${cat}</span>`)
+//       .join("");
+//
+//     let ageRange = "";
+//     if (policy.sprtTrgtMinAge || policy.sprtTrgtMaxAge) {
+//       const minAge = policy.sprtTrgtMinAge || "제한없음";
+//       const maxAge = policy.sprtTrgtMaxAge || "제한없음";
+//       ageRange = `만 ${minAge}세 ~ 만 ${maxAge}세`;
+//     }
+//
+//     let period = "상시";
+//     if (policy.bizPrdBgngYmd && policy.bizPrdEndYmd) {
+//       const start = policy.bizPrdBgngYmd.replace(
+//         /(\d{4})(\d{2})(\d{2})/,
+//         "$1.$2.$3"
+//       );
+//       const end = policy.bizPrdEndYmd.replace(
+//         /(\d{4})(\d{2})(\d{2})/,
+//         "$1.$2.$3"
+//       );
+//       period = `${start} ~ ${end}`;
+//     } else if (policy.bizPrdEtcCn) {
+//       period = policy.bizPrdEtcCn;
+//     }
+//
+//     card.innerHTML = `
+//       <button class="bookmark-btn" aria-label="즐겨찾기">
+//         <i data-lucide="bookmark"></i>
+//       </button>
+//       <h3 class="job-title">${policy.plcyNm}</h3>
+//       <div class="job-tags">${tagsHtml}</div>
+//       <div class="job-info">
+//         ${ageRange ? `<p><i data-lucide="user"></i> ${ageRange}</p>` : ""}
+//         <p><i data-lucide="clock"></i> ${period}</p>
+//         ${
+//           policy.sprvsnInstCdNm
+//             ? `<p><i data-lucide="building"></i> ${policy.sprvsnInstCdNm}</p>`
+//             : ""
+//         }
+//       </div>
+//       <p class="job-pay">${
+//         policy.plcyExplnCn?.substring(0, 100) || "상세 내용 확인 필요"
+//       }${policy.plcyExplnCn?.length > 100 ? "..." : ""}</p>
+//     `;
+//
+//     card.addEventListener("click", (e) => {
+//       if (!e.target.closest(".bookmark-btn")) {
+//         window.open(policy.aplyUrlAddr || policy.refUrlAddr1, "_blank");
+//       }
+//     });
+//
+//     card.dataset.categories = categories.join(",");
+//
+//     jobList.appendChild(card);
+//   });
+//
+//   lucide.createIcons();
+//   bindBookmarkButtons();
+// }
 
 // ===== 북마크 기능 바인딩 =====
 function bindBookmarkButtons() {
@@ -231,30 +289,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userKeywords = userData?.keywords || [];
   console.log("🔖 사용자 키워드:", userKeywords);
 
-  // ===== 공지사항 로드 (기본 10개) =====
-  try {
-    console.log("📋 공지사항 로딩 중... (10개)");
-    const policies = await fetchPolicies(10);
-    console.log(`✅ ${policies.length}개의 공지사항 로드 완료`);
-
-    // 공지사항 카드 렌더링
-    renderPolicyCards(policies);
-  } catch (error) {
-    console.error("❌ 정책 정보 로드 실패:", error);
-    const jobList = document.querySelector(".job-list");
-    if (jobList) {
-      jobList.innerHTML = `
-        <div style="text-align:center; padding:40px; color:#e74c3c;">
-          <p style="font-size:18px; margin-bottom:10px;">⚠️ 정책 정보를 불러올 수 없습니다.</p>
-          <p style="font-size:14px; color:#999;">${error.message}</p>
-          <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px; cursor:pointer;">
-            새로고침
-          </button>
-        </div>
-      `;
-    }
-    return;
-  }
+  // ===== 공지사항 로드 (주석처리) =====
+  // try {
+  //   console.log("📋 공지사항 로딩 중... (10개)");
+  //   const policies = await fetchPolicies(10);
+  //   console.log(`✅ ${policies.length}개의 공지사항 로드 완료`);
+  //   renderPolicyCards(policies);
+  // } catch (error) {
+  //   console.error("❌ 정책 정보 로드 실패:", error);
+  //   const jobList = document.querySelector(".job-list");
+  //   if (jobList) {
+  //     jobList.innerHTML = `
+  //       <div style="text-align:center; padding:40px; color:#e74c3c;">
+  //         <p style="font-size:18px; margin-bottom:10px;">⚠️ 정책 정보를 불러올 수 없습니다.</p>
+  //         <p style="font-size:14px; color:#999;">${error.message}</p>
+  //         <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px; cursor:pointer;">
+  //           새로고침
+  //         </button>
+  //       </div>
+  //     `;
+  //   }
+  //   return;
+  // }
 
   // ===== 카테고리 버튼 동적 생성 =====
   const categoryScroll = document.querySelector(".category-scroll");
@@ -366,6 +422,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
+
+  // 기존 북마크 버튼 바인딩
+  bindBookmarkButtons();
 });
 
 // =============================
@@ -376,7 +435,7 @@ const fabMenu = document.getElementById("fabMenu");
 const fabOverlay = document.getElementById("fabOverlay");
 const matchingBtn = document.getElementById("matchingBtn");
 const historyBtn = document.getElementById("historyBtn");
-
+const aiA = document.getElementById("aiA");
 if (fabBtn && fabMenu && fabOverlay) {
   fabBtn.addEventListener("click", () => {
     fabBtn.classList.toggle("active");
@@ -401,6 +460,19 @@ if (matchingBtn) {
 if (historyBtn) {
   historyBtn.addEventListener("click", () => {
     alert("작년 공지 확인 페이지로 이동합니다.");
-    // location.href = 'history.html';
+    location.href = "history.html";
   });
 }
+if (aiA) {
+  aiA.addEventListener("click", () => {
+    location.href = "aiA.html";
+  });
+}
+document.querySelectorAll(".job-card").forEach((card) => {
+  card.addEventListener("click", (e) => {
+    if (!e.target.closest(".bookmark-btn")) {
+      const id = card.id; // 예: detail1, detail2, detail3
+      location.href = `${id}.html`; // ✅ id에 맞는 html로 바로 이동
+    }
+  });
+});
