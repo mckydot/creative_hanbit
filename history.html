@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>한빛모아 || 작년 공지 (2024)</title>
+  <style>
+    @font-face {
+      font-family: 'Juache';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --sky: #9cd6fd;
+      --sky2: #18a8f1;
+      --gray: #787878;
+      --white: #ffffff;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Juache', "Noto Sans KR", sans-serif;
+      background: #f7f9fb;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    /* 상단바 */
+    header.navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 58px;
+      background-color: var(--sky2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    main {
+      margin-top: 70px;
+      padding: 20px 16px 80px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 공지 카드 */
+    .notice-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notice-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .notice-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    .notice-date {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .notice-tag {
+      display: inline-block;
+      background: #eef6ff;
+      color: var(--sky2);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 10px;
+      margin-top: 4px;
+    }
+
+    .notice-content {
+      font-size: 14px;
+      color: #555;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* 하단 내브바 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      background-color: var(--sky2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+      z-index: 999;
+    }
+
+    .bottom-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-family: 'Juache';
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .bottom-btn:hover {
+      opacity: 0.85;
+    }
+
+    .home-btn {
+      position: relative;
+      transform: translateY(-10px);
+    }
+
+    .home-icon {
+      background-color: white;
+      color: var(--sky2);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 480px) {
+      main { padding: 16px 10px 70px; }
+      .notice-card { padding: 14px; }
+      .notice-title { font-size: 15px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <h1>📜 작년 공지 (2024)</h1>
+  </header>
+
+  <main>
+    <div class="notice-card" onclick="viewNotice(this)">
+      <div class="notice-title">2024학년도 하계 장학금 신청 안내</div>
+      <div class="notice-date">2024.07.15</div>
+      <span class="notice-tag">장학공지</span>
+      <p class="notice-content">
+        2024학년도 하계 장학금 신청 일정 및 유의사항을 안내드립니다. 신청기간은 7월 15일부터 7월 31일까지입니다.
+      </p>
+    </div>
+
+    <div class="notice-card" onclick="viewNotice(this)">
+      <div class="notice-title">2024년 2학기 개강 일정 안내</div>
+      <div class="notice-date">2024.08.28</div>
+      <span class="notice-tag">학사공지</span>
+      <p class="notice-content">
+        2024학년도 2학기 개강은 9월 2일(월)이며, 수강신청 변경은 9월 2일~6일 사이에 진행됩니다.
+      </p>
+    </div>
+
+    <div class="notice-card" onclick="viewNotice(this)">
+      <div class="notice-title">한빛모아 시스템 점검 안내</div>
+      <div class="notice-date">2024.12.20</div>
+      <span class="notice-tag">서비스공지</span>
+      <p class="notice-content">
+        안정적인 서비스 제공을 위해 12월 23일(토) 00:00~06:00 사이 시스템 점검이 진행됩니다.
+      </p>
+    </div>
+
+    <div class="notice-card" onclick="viewNotice(this)">
+      <div class="notice-title">2024년도 졸업식 일정 공지</div>
+      <div class="notice-date">2024.02.15</div>
+      <span class="notice-tag">행사공지</span>
+      <p class="notice-content">
+        졸업식은 2024년 2월 22일(목) 오전 10시에 본관 대강당에서 진행될 예정입니다.
+      </p>
+    </div>
+  </main>
+
+  <!-- 하단 내브바 -->
+  <nav class="bottom-nav">
+    <button class="bottom-btn" onclick="goHome()">
+      <div class="home-icon">🏠</div>
+      홈
+    </button>
+    <button class="bottom-btn" onclick="alert('카테고리 기능 준비 중입니다.')">📂<br>카테고리</button>
+    <button class="bottom-btn" onclick="alert('즐겨찾기 기능 준비 중입니다.')">⭐<br>즐겨찾기</button>
+  </nav>
+
+  <script>
+    function viewNotice(card) {
+      const title = card.querySelector('.notice-title').textContent;
+      alert(`"${title}" 공지를 열람합니다.`);
+      // 추후 개별 상세페이지로 연결 가능: location.href = `notice-detail.html?title=${encodeURIComponent(title)}`
+    }
+
+    function goHome() {
+      location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

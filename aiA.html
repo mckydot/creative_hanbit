@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한빛모아 || AI 채팅</title>
+  <style>
+    /* ===== 기본 스타일 ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Sans KR", sans-serif;
+    }
+
+    body {
+      background: #f4f5f7;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ===== 상단 내브바 ===== */
+    header {
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* ===== 채팅 영역 ===== */
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .message {
+      max-width: 75%;
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-radius: 14px;
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #0078ff;
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+
+    .ai {
+      align-self: flex-start;
+      background: #e9ecef;
+      color: #222;
+      border-bottom-left-radius: 2px;
+    }
+
+    /* ===== 입력창 ===== */
+    .input-area {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border-top: 1px solid #ddd;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      background: #0078ff;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: 0.2s;
+    }
+
+    label:hover {
+      background: #005fcc;
+    }
+
+    .placeholder {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* ===== 스크롤바 디자인 ===== */
+    .chat-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .chat-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI 문서 분석 서비스</h1>
+  </header>
+
+  <div class="chat-container" id="chatContainer">
+    <div class="ai message">
+      안녕하세요 👋 문서 분석 서비스입니다.<br>
+      분석할 사업계획서를 업로드해주세요.
+    </div>
+  </div>
+
+  <div class="input-area">
+    <label for="fileInput">📄 파일 업로드</label>
+    <input type="file" id="fileInput" accept=".pdf,.docx,.hwp,.txt">
+    <div class="placeholder">사업계획서를 업로드하세요...</div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const chatContainer = document.getElementById("chatContainer");
+
+    const aiResponse = `분석 결과, 문서에는 다음과 같은 보완이 필요함이 확인되었습니다.<br>
+    첫째, 사용자 관점의 신뢰성을 강화하기 위해 인터뷰 또는 실제 사용자 의견이 포함되어야 합니다.<br>
+    둘째, 서비스의 핵심 가치가 명확히 전달되도록 기능을 중요도 순으로 재배치할 필요가 있습니다.<br>
+    셋째, 경쟁 구도 중심의 기술보다는 기존 유사 서비스 분석 및 보완 관계 중심의 서술 방식으로 수정이 요구됩니다.`;
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        // 사용자 메시지 (오른쪽)
+        const userMsg = document.createElement("div");
+        userMsg.className = "message user";
+        userMsg.innerHTML = `📎 ${file.name}`;
+        chatContainer.appendChild(userMsg);
+
+        // AI 응답 메시지 (왼쪽)
+        setTimeout(() => {
+          const aiMsg = document.createElement("div");
+          aiMsg.className = "message ai";
+          aiMsg.innerHTML = aiResponse;
+          chatContainer.appendChild(aiMsg);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }, 1000);
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>
