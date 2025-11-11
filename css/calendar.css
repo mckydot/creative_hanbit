@@ -425,3 +425,81 @@ body {
         align-self: flex-end;
     }
 }
+
+/* 공지사항이 있는 날짜 스타일 */
+.calendar-day.has-policy {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #2563eb;
+  font-weight: bold;
+}
+
+/* 공지사항 시작일 */
+.calendar-day.policy-start::before {
+  content: "📌";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 10px;
+}
+
+/* 공지사항 종료일 */
+.calendar-day.policy-end::after {
+  content: "🏁";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+}
+
+/* 수동 일정과 공지사항 둘 다 있는 경우 */
+.calendar-day.has-policy.has-schedule {
+  background: linear-gradient(135deg, #dbeafe 0%, #d1fae5 100%);
+  border: 2px solid #7c3aed;
+}
+
+/* 공지사항 아이템 스타일 */
+.schedule-item.policy-item {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+  border-left: 4px solid #2563eb;
+}
+/* 공지사항 시작일 */
+.calendar-day.policy-start {
+  position: relative;
+  border: 2px solid #2563eb;
+}
+
+.calendar-day.policy-start::before {
+  content: "📌";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 12px;
+}
+
+/* 공지사항 종료일 */
+.calendar-day.policy-end {
+  position: relative;
+  border: 2px solid #dc2626;
+}
+
+.calendar-day.policy-end::after {
+  content: "🏁";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 12px;
+}
+
+/* 시작일과 종료일이 같은 날인 경우 */
+.calendar-day.policy-start.policy-end {
+  border: 2px solid #7c3aed;
+}
+
+.calendar-day.policy-start.policy-end::before {
+  content: "📌🏁";
+  font-size: 11px;
+}
+
+.calendar-day.policy-start.policy-end::after {
+  content: "";
+}
