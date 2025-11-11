@@ -158,8 +158,12 @@ function renderPolicyCards(policies) {
 
     // 기간 정보 처리
     let period = "상시";
+    let periodRaw = ""; // 원본 날짜 데이터 저장
+
     if (policy.reqstDt || policy.reqstBeginEndDe) {
       const dateStr = policy.reqstDt || policy.reqstBeginEndDe;
+      periodRaw = dateStr; // 원본 저장
+
       if (dateStr.includes("~")) {
         const [start, end] = dateStr.split("~").map((d) => d.trim());
         const formatDate = (date) => {
@@ -174,6 +178,7 @@ function renderPolicyCards(policies) {
       }
     } else if (policy.pubDate) {
       period = policy.pubDate;
+      periodRaw = policy.pubDate;
     }
 
     // 설명 텍스트 정리 (HTML 태그 제거)
@@ -215,6 +220,10 @@ function renderPolicyCards(policies) {
     // 링크 정보를 dataset에 저장
     const policyLink = policy.link || policy.pblancUrl || "";
     card.dataset.link = policyLink;
+
+    // ⭐ 기간 정보를 dataset에 저장
+    card.dataset.period = period;
+    card.dataset.periodRaw = periodRaw;
 
     card.addEventListener("click", (e) => {
       if (!e.target.closest(".bookmark-btn")) {
@@ -373,16 +382,32 @@ function bindBookmarkButtons() {
         }
       } else {
         // 북마크 추가
+
+        // ⭐ 기간 정보 추출 - dataset에서 우선 가져오기
+        let period = card.dataset.period || "";
+
+        // dataset에 없으면 DOM에서 추출
+        if (!period) {
+          const clockIcon = card.querySelector('[data-lucide="clock"]');
+          if (clockIcon && clockIcon.parentElement) {
+            period = clockIcon.parentElement.textContent.trim();
+          }
+        }
+
+        console.log("💾 저장할 기간 정보:", period);
+
         const policyData = {
           policyId: policyId,
           title: card.querySelector(".job-title")?.textContent || "",
           description: card.querySelector(".job-pay")?.textContent || "",
           link: card.dataset.link || "",
           category: card.dataset.categories || "",
-          period: card.dataset.period || "",
+          period: period, // ⭐ 수정된 부분
           author:
             card.querySelector(".job-info p:last-child")?.textContent || "",
         };
+
+        console.log("💾 저장할 북마크 데이터:", policyData);
 
         const success = await saveBookmark(policyData);
         if (success) {
