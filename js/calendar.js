@@ -60,6 +60,75 @@ window.addEventListener("DOMContentLoaded", async () => {
   let selectedDate = null;
 
   let schedules = {};
+  let bookmarkedPolicies = []; // 북마크된 공지사항 목록
+
+  // ✅ 날짜 파싱 함수 (YYYYMMDD, YYYY.MM.DD, YYYY-MM-DD 등 지원)
+  function parseDate(dateStr) {
+    if (!dateStr) return null;
+
+    // YYYYMMDD 형식
+    if (/^\d{8}$/.test(dateStr)) {
+      const year = parseInt(dateStr.substring(0, 4));
+      const month = parseInt(dateStr.substring(4, 6)) - 1;
+      const day = parseInt(dateStr.substring(6, 8));
+      return new Date(year, month, day);
+    }
+
+    // YYYY.MM.DD 또는 YYYY-MM-DD 형식
+    const match = dateStr.match(/(\d{4})[-.](\d{1,2})[-.](\d{1,2})/);
+    if (match) {
+      return new Date(
+        parseInt(match[1]),
+        parseInt(match[2]) - 1,
+        parseInt(match[3])
+      );
+    }
+
+    return null;
+  }
+
+  // ✅ 북마크된 공지사항 불러오기
+  async function loadBookmarkedPolicies() {
+    try {
+      const { data, error } = await supabase
+        .from("bookmarks")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      bookmarkedPolicies = data
+        .map((item) => {
+          // policy_period에서 시작일과 종료일 추출
+          let startDate = null;
+          let endDate = null;
+
+          if (item.policy_period) {
+            // "YYYYMMDD ~ YYYYMMDD" 또는 "YYYY.MM.DD ~ YYYY.MM.DD" 형식
+            const periodMatch = item.policy_period.match(
+              /(\d{4}[-.]?\d{2}[-.]?\d{2})\s*~\s*(\d{4}[-.]?\d{2}[-.]?\d{2})/
+            );
+            if (periodMatch) {
+              startDate = parseDate(periodMatch[1].replace(/[-.]/g, ""));
+              endDate = parseDate(periodMatch[2].replace(/[-.]/g, ""));
+            }
+          }
+
+          return {
+            id: item.id,
+            title: item.policy_title,
+            startDate: startDate,
+            endDate: endDate,
+            link: item.policy_link,
+          };
+        })
+        .filter((item) => item.startDate && item.endDate); // 날짜가 있는 항목만
+
+      console.log("✅ 북마크된 공지사항:", bookmarkedPolicies);
+    } catch (error) {
+      console.error("북마크 공지사항 불러오기 오류:", error);
+    }
+  }
 
   // ✅ Supabase에서 일정 불러오기
   async function loadSchedules() {
@@ -79,6 +148,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         schedules[item.date].push({
           id: item.id,
           text: item.schedule_text,
+          type: "manual", // 수동 추가 일정
         });
       });
 
@@ -105,6 +175,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       schedules[date].push({
         id: data[0].id,
         text: text,
+        type: "manual",
       });
 
       renderCalendar(currentMonth, currentYear);
@@ -195,10 +266,39 @@ window.addEventListener("DOMContentLoaded", async () => {
         dayDiv.classList.add("today");
       }
 
-      // 일정이 있는 날 표시
+      const currentDate = new Date(year, month, date);
       const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(
         date
       ).padStart(2, "0")}`;
+
+      // ✅ 북마크된 공지사항 확인 (시작일과 종료일만)
+      const policiesOnDate = bookmarkedPolicies.filter((policy) => {
+        // 시작일 또는 종료일과 정확히 일치하는지 확인
+        return (
+          currentDate.getTime() === policy.startDate.getTime() ||
+          currentDate.getTime() === policy.endDate.getTime()
+        );
+      });
+
+      if (policiesOnDate.length > 0) {
+        // 공지사항 시작일 표시
+        const isStartDate = policiesOnDate.some(
+          (p) => p.startDate.getTime() === currentDate.getTime()
+        );
+        if (isStartDate) {
+          dayDiv.classList.add("policy-start");
+        }
+
+        // 공지사항 종료일 표시
+        const isEndDate = policiesOnDate.some(
+          (p) => p.endDate.getTime() === currentDate.getTime()
+        );
+        if (isEndDate) {
+          dayDiv.classList.add("policy-end");
+        }
+      }
+
+      // 수동 일정이 있는 날 표시
       if (schedules[dateKey] && schedules[dateKey].length > 0) {
         dayDiv.classList.add("has-schedule");
       }
@@ -207,6 +307,15 @@ window.addEventListener("DOMContentLoaded", async () => {
       dayDiv.addEventListener("click", () => {
         selectedDate = dateKey;
         selectedDateTitle.textContent = `${year}년 ${month + 1}월 ${date}일`;
+
+        // 해당 날짜의 공지사항 표시
+        if (policiesOnDate.length > 0) {
+          const policyInfo = policiesOnDate
+            .map((p) => `📌 ${p.title}`)
+            .join("\n");
+          alert(`이 날짜의 공지사항:\n\n${policyInfo}`);
+        }
+
         scheduleInput.style.display = "block";
         scheduleText.value = "";
         scheduleText.focus();
@@ -219,21 +328,19 @@ window.addEventListener("DOMContentLoaded", async () => {
     renderScheduleList(year, month);
   }
 
-  // ✅ 일정 목록 렌더링 (오늘 포함)
+  // ✅ 일정 목록 렌더링 (공지사항 포함)
   function renderScheduleList(year, month) {
     scheduleList.innerHTML = "";
 
-    // ✅ 오늘 날짜 (시간 제거)
     const todayDate = new Date();
     todayDate.setHours(0, 0, 0, 0);
 
-    const filtered = Object.keys(schedules)
+    // 수동 일정 필터링
+    const filteredSchedules = Object.keys(schedules)
       .filter((key) => {
         const [y, m, d] = key.split("-").map(Number);
         const date = new Date(y, m - 1, d);
         date.setHours(0, 0, 0, 0);
-
-        // ✅ 현재 달이고, 오늘 이후 또는 오늘인 날짜만 표시
         return y === year && m === month + 1 && date >= todayDate;
       })
       .sort((a, b) => {
@@ -242,33 +349,86 @@ window.addEventListener("DOMContentLoaded", async () => {
         return new Date(ya, ma - 1, da) - new Date(yb, mb - 1, db);
       });
 
-    if (filtered.length === 0) {
+    // 이번 달의 북마크된 공지사항 필터링 (시작일/종료일만)
+    const filteredPolicies = bookmarkedPolicies.filter((policy) => {
+      const startMonth = policy.startDate.getMonth();
+      const startYear = policy.startDate.getFullYear();
+      const endMonth = policy.endDate.getMonth();
+      const endYear = policy.endDate.getFullYear();
+
+      // 시작일이나 종료일이 현재 달에 있는 경우만
+      return (
+        (startYear === year && startMonth === month) ||
+        (endYear === year && endMonth === month)
+      );
+    });
+
+    if (filteredSchedules.length === 0 && filteredPolicies.length === 0) {
       scheduleList.innerHTML = `<p style="color:#666; text-align:center;">다가올 일정이 없습니다.</p>`;
       return;
     }
 
-    filtered.forEach((dateKey) => {
-      const [y, m, d] = dateKey.split("-");
-      schedules[dateKey].forEach((item) => {
+    // 북마크된 공지사항 표시
+    if (filteredPolicies.length > 0) {
+      const policyHeader = document.createElement("h4");
+      policyHeader.textContent = "📌 북마크한 공지사항";
+      policyHeader.style.cssText =
+        "margin: 15px 0 10px 0; color: #2563eb; font-size: 14px;";
+      scheduleList.appendChild(policyHeader);
+
+      filteredPolicies.forEach((policy) => {
         const div = document.createElement("div");
-        div.classList.add("schedule-item");
+        div.classList.add("schedule-item", "policy-item");
+        const startStr = `${
+          policy.startDate.getMonth() + 1
+        }/${policy.startDate.getDate()}`;
+        const endStr = `${
+          policy.endDate.getMonth() + 1
+        }/${policy.endDate.getDate()}`;
         div.innerHTML = `
-                <span class="schedule-date">${m}월 ${d}일</span>
-                <span class="schedule-text">${item.text}</span>
-                <button class="delete-btn" data-id="${item.id}" data-key="${dateKey}">삭제</button>
-            `;
+          <span class="schedule-date" style="background: #2563eb;">${startStr} ~ ${endStr}</span>
+          <span class="schedule-text">${policy.title}</span>
+          ${
+            policy.link
+              ? `<a href="${policy.link}" target="_blank" style="color: #2563eb; font-size: 12px;">링크 →</a>`
+              : ""
+          }
+        `;
         scheduleList.appendChild(div);
       });
-    });
+    }
 
-    // 삭제 기능
-    document.querySelectorAll(".delete-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const id = e.target.dataset.id;
-        const key = e.target.dataset.key;
-        deleteSchedule(id, key);
+    // 수동 일정 표시
+    if (filteredSchedules.length > 0) {
+      const scheduleHeader = document.createElement("h4");
+      scheduleHeader.textContent = "✏️ 내 일정";
+      scheduleHeader.style.cssText =
+        "margin: 15px 0 10px 0; color: #059669; font-size: 14px;";
+      scheduleList.appendChild(scheduleHeader);
+
+      filteredSchedules.forEach((dateKey) => {
+        const [y, m, d] = dateKey.split("-");
+        schedules[dateKey].forEach((item) => {
+          const div = document.createElement("div");
+          div.classList.add("schedule-item");
+          div.innerHTML = `
+            <span class="schedule-date">${m}월 ${d}일</span>
+            <span class="schedule-text">${item.text}</span>
+            <button class="delete-btn" data-id="${item.id}" data-key="${dateKey}">삭제</button>
+          `;
+          scheduleList.appendChild(div);
+        });
       });
-    });
+
+      // 삭제 기능
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const id = e.target.dataset.id;
+          const key = e.target.dataset.key;
+          deleteSchedule(id, key);
+        });
+      });
+    }
   }
 
   // ✅ 일정 추가 버튼 클릭
@@ -333,15 +493,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   homeTop.addEventListener("click", () => {
     location.href = "main.html";
   });
-  // 삭제 기능
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const id = e.target.dataset.id;
-      const key = e.target.dataset.key;
-      deleteSchedule(id, key);
-    });
-  });
 
   // ✅ 초기 데이터 로드
-  await loadSchedules();
+  await loadBookmarkedPolicies(); // 북마크 공지사항 먼저 로드
+  await loadSchedules(); // 그 다음 일정 로드
 });
