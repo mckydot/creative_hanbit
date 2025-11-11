@@ -99,17 +99,31 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       console.log("📊 데이터베이스에서 가져온 북마크:", data);
 
+      // 첫 번째 데이터의 모든 필드 확인
+      if (data.length > 0) {
+        console.log("첫 번째 북마크의 모든 필드:", Object.keys(data[0]));
+        console.log("첫 번째 북마크 전체 데이터:", data[0]);
+      }
+
       bookmarkedPolicies = data
         .map((item) => {
-          console.log(
-            `처리 중: ${item.policy_title}, period: ${item.policy_period}`
-          );
+          console.log(`처리 중: ${item.policy_title}`);
+          console.log("사용 가능한 날짜 필드들:", {
+            policy_period: item.policy_period,
+            start_date: item.start_date,
+            end_date: item.end_date,
+            policy_start_date: item.policy_start_date,
+            policy_end_date: item.policy_end_date,
+            application_start: item.application_start,
+            application_end: item.application_end,
+          });
 
           // policy_period에서 시작일과 종료일 추출
           let startDate = null;
           let endDate = null;
 
-          if (item.policy_period) {
+          // 방법 1: policy_period 필드 사용
+          if (item.policy_period && item.policy_period.trim()) {
             // "YYYYMMDD ~ YYYYMMDD" 또는 "YYYY.MM.DD ~ YYYY.MM.DD" 형식
             const periodMatch = item.policy_period.match(
               /(\d{4}[-.]?\d{2}[-.]?\d{2})\s*~\s*(\d{4}[-.]?\d{2}[-.]?\d{2})/
