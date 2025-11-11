@@ -97,8 +97,14 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       if (error) throw error;
 
+      console.log("📊 데이터베이스에서 가져온 북마크:", data);
+
       bookmarkedPolicies = data
         .map((item) => {
+          console.log(
+            `처리 중: ${item.policy_title}, period: ${item.policy_period}`
+          );
+
           // policy_period에서 시작일과 종료일 추출
           let startDate = null;
           let endDate = null;
@@ -108,9 +114,19 @@ window.addEventListener("DOMContentLoaded", async () => {
             const periodMatch = item.policy_period.match(
               /(\d{4}[-.]?\d{2}[-.]?\d{2})\s*~\s*(\d{4}[-.]?\d{2}[-.]?\d{2})/
             );
+
+            console.log("정규식 매칭 결과:", periodMatch);
+
             if (periodMatch) {
-              startDate = parseDate(periodMatch[1].replace(/[-.]/g, ""));
-              endDate = parseDate(periodMatch[2].replace(/[-.]/g, ""));
+              const startStr = periodMatch[1].replace(/[-.]/g, "");
+              const endStr = periodMatch[2].replace(/[-.]/g, "");
+
+              console.log("시작일 문자열:", startStr, "종료일 문자열:", endStr);
+
+              startDate = parseDate(startStr);
+              endDate = parseDate(endStr);
+
+              console.log("파싱된 시작일:", startDate, "종료일:", endDate);
             }
           }
 
@@ -122,9 +138,15 @@ window.addEventListener("DOMContentLoaded", async () => {
             link: item.policy_link,
           };
         })
-        .filter((item) => item.startDate && item.endDate); // 날짜가 있는 항목만
+        .filter((item) => {
+          const hasValidDates = item.startDate && item.endDate;
+          if (!hasValidDates) {
+            console.log(`❌ 날짜가 없어서 제외됨: ${item.title}`);
+          }
+          return hasValidDates;
+        });
 
-      console.log("✅ 북마크된 공지사항:", bookmarkedPolicies);
+      console.log("✅ 최종 북마크된 공지사항:", bookmarkedPolicies);
     } catch (error) {
       console.error("북마크 공지사항 불러오기 오류:", error);
     }
